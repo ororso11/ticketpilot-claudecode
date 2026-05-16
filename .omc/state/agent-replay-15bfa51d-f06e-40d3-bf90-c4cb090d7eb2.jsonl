@@ -12,3 +12,10 @@
 {"t":0,"agent":"a248d9e","agent_type":"unknown","event":"agent_stop","success":true}
 {"t":0,"agent":"a619871","agent_type":"unknown","event":"agent_stop","success":true}
 {"t":0,"agent":"a99b08c","agent_type":"unknown","event":"agent_stop","success":true}
+{"t":0,"agent":"a581ace","agent_type":"unknown","event":"agent_stop","success":true}
+{"t":0,"agent":"a9339e5","agent_type":"unknown","event":"agent_stop","success":true}
+{"t":0,"agent":"a16052f","agent_type":"unknown","event":"agent_stop","success":true}
+{"t":0,"agent":"a26d392","agent_type":"unknown","event":"agent_stop","success":true}
+{"t":0,"agent":"system","event":"keyword_detected","keyword":"autopilot"}
+{"t":0,"agent":"system","event":"mode_change","mode_from":"none","mode_to":"autopilot"}
+{"t":0,"agent":"af426d3","agent_type":"unknown","event":"agent_stop","success":true}

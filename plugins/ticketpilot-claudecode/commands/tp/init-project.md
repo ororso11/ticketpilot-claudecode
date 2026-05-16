@@ -1,8 +1,8 @@
 # /tp:init-project
 
-Analyze the current project and generate TicketPilot project context files.
+현재 프로젝트를 분석하고 TicketPilot 프로젝트 컨텍스트 파일을 생성합니다.
 
-## Usage
+## 사용법
 
 ```
 /tp:init-project
@@ -10,104 +10,80 @@ Analyze the current project and generate TicketPilot project context files.
 
 ---
 
-## What This Command Does
+## 동작 방식
 
-Scans the project root and generates structured context that TicketPilot uses when analyzing Jira tickets. Similar to OMC's `deepinit`, but focused on what TicketPilot needs for ticket-driven development.
+프로젝트 루트를 스캔하여 Jira 티켓 분석 시 사용할 구조화된 컨텍스트를 생성합니다.
 
-### Step 1 — Analyze Project Structure
+### Step 1 — 프로젝트 구조 분석
 
-Scan the project root and detect:
+프로젝트 루트를 스캔하여 감지:
 
-| Item | How to detect |
-|------|--------------|
-| Tech stack | `package.json`, `pom.xml`, `build.gradle`, `go.mod`, `requirements.txt`, `Cargo.toml` |
-| Frameworks | `package.json` dependencies (Next.js, React, NestJS, etc.) |
-| Package manager | `pnpm-lock.yaml`, `yarn.lock`, `package-lock.json`, `bun.lockb` |
-| Build command | `package.json` scripts.build, `pom.xml`, `build.gradle` |
-| Test command | `vitest.config.*`, `jest.config.*`, `package.json` scripts.test, `pytest.ini` |
-| Important directories | `src/`, `app/`, `lib/`, `packages/`, `services/`, `api/`, `domain/` |
-| Risk areas | directories named `auth`, `security`, `payment`, `privacy`, `migration` |
+| 항목 | 감지 방법 |
+|------|---------|
+| 기술 스택 | `package.json`, `pom.xml`, `build.gradle`, `go.mod`, `requirements.txt`, `Cargo.toml` |
+| 프레임워크 | `package.json` 의존성 (Next.js, React, NestJS 등) |
+| 패키지 매니저 | `pnpm-lock.yaml`, `yarn.lock`, `package-lock.json`, `bun.lockb` |
+| 빌드 명령 | `package.json` scripts.build |
+| 테스트 명령 | `vitest.config.*`, `jest.config.*`, `package.json` scripts.test |
+| 주요 디렉토리 | `src/`, `app/`, `lib/`, `packages/`, `services/`, `api/`, `domain/` |
+| 위험 영역 | `auth`, `security`, `payment`, `privacy`, `migration` 포함 디렉토리 |
 
-### Step 2 — Detect Coding Conventions
+### Step 2 — 코딩 컨벤션 감지
 
-Look for:
-- `.eslintrc.*`, `.prettierrc.*` → JavaScript/TypeScript conventions
-- `checkstyle.xml`, `pmd.xml` → Java conventions
-- `pyproject.toml` → Python conventions
-- `CONTRIBUTING.md`, `STYLE.md` → documented conventions
+아래 파일 확인:
+- `.eslintrc.*`, `.prettierrc.*` → JavaScript/TypeScript 컨벤션
+- `checkstyle.xml`, `pmd.xml` → Java 컨벤션
+- `pyproject.toml` → Python 컨벤션
+- `CONTRIBUTING.md`, `STYLE.md` → 문서화된 컨벤션
 
-Note the detected conventions briefly.
-
-### Step 3 — Generate Files
-
-Create or update the following files:
+### Step 3 — 파일 생성
 
 #### `.ticketpilot/project-memory.json`
 ```json
 {
-  "techStack": "<detected>",
-  "frameworks": ["<detected>"],
-  "packageManager": "<detected>",
-  "buildCommand": "<detected>",
-  "testCommand": "<detected>",
-  "conventions": "<brief summary>",
-  "jiraProject": "<from JIRA_BASE_URL or empty>",
+  "techStack": "<감지된 스택>",
+  "frameworks": ["<감지된 프레임워크>"],
+  "packageManager": "<감지된 패키지 매니저>",
+  "buildCommand": "<감지된 빌드 명령>",
+  "testCommand": "<감지된 테스트 명령>",
+  "conventions": "<컨벤션 요약>",
   "importantPaths": ["src/", "..."],
-  "riskAreas": ["auth", "security", "payment", "privacy", "db migration", "production config"],
+  "riskAreas": ["auth", "security", "payment", "privacy", "db migration"],
   "directives": [
     { "directive": "운영 DB 관련 SQL은 실행 전 반드시 사용자 승인", "priority": "high" },
     { "directive": "개인정보/인증/결제 관련 변경은 high risk로 분류", "priority": "high" }
   ],
-  "updatedAt": "<ISO timestamp>"
+  "updatedAt": "<ISO 타임스탬프>"
 }
 ```
 
 #### `.ticketpilot/artifacts/project/project-analysis.md`
-A human-readable project overview with:
-- Tech stack table
-- Framework list
-- Build/test commands
-- Important directories
-- Risk areas
-- Coding conventions summary
-- Directives
+사람이 읽기 좋은 프로젝트 개요 (기술 스택, 프레임워크, 빌드/테스트 명령, 주요 디렉토리, 위험 영역, 컨벤션).
 
-#### `docs/ticketpilot-project-map.md`
-Same content as project-analysis.md — serves as a reference document for developers.
-
-#### `AGENTS.md` (create only if it doesn't exist)
-A concise AGENTS.md describing the project for Claude Code agents, including:
-- Tech stack
-- Directory structure
-- Risk classifications
-- TicketPilot workflow directives
-
-### Step 4 — Show Summary
+### Step 4 — 결과 요약
 
 ```
-Project initialization complete.
+프로젝트 초기화 완료.
 
-  Stack:         Next.js / TypeScript
-  Frameworks:    React, Next.js
-  Pkg manager:   pnpm
-  Build:         pnpm build
-  Test:          pnpm test
-  Risk areas:    auth, security, payment, db migration
+  스택:        Next.js / TypeScript
+  프레임워크:   React, Next.js
+  패키지 매니저: pnpm
+  빌드:        pnpm build
+  테스트:      pnpm test
+  위험 영역:   auth, security, payment, db migration
 
-Files written:
+생성된 파일:
   .ticketpilot/project-memory.json
   .ticketpilot/artifacts/project/project-analysis.md
-  docs/ticketpilot-project-map.md
-  AGENTS.md
 
-Next: /tp:start PROJ-123
+다음: /tp:start PROJ-123
 ```
 
 ---
 
-## Rules
+## 규칙
 
-- **Read-only**: This command creates documentation files only. It does NOT modify any source code.
-- **Idempotent**: Safe to run multiple times. Existing `AGENTS.md` is never overwritten (skipped with a warning).
-- **No Jira calls**: Does not call the Jira API.
-- **Credentials never logged**: Never print environment variable values.
+- **읽기 전용**: 소스 코드는 수정하지 않습니다. 문서 파일만 생성.
+- **멱등성**: 여러 번 실행해도 안전합니다.
+- **Jira 호출 없음**: Jira API를 호출하지 않습니다.
+- **인증 정보 출력 금지**: 환경변수 값은 절대 출력하지 않습니다.

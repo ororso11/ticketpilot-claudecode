@@ -172,6 +172,66 @@
       "accessCount": 2,
       "lastAccessed": 1778913848324,
       "type": "directory"
+    },
+    {
+      "path": "plugins\\ticketpilot-claudecode\\commands\\tp\\setup.md",
+      "accessCount": 2,
+      "lastAccessed": 1778915074757,
+      "type": "file"
+    },
+    {
+      "path": "plugins\\ticketpilot-claudecode\\commands\\tp\\start.md",
+      "accessCount": 2,
+      "lastAccessed": 1778915110699,
+      "type": "file"
+    },
+    {
+      "path": "plugins\\ticketpilot-claudecode\\commands\\tp\\doctor.md",
+      "accessCount": 2,
+      "lastAccessed": 1778915126865,
+      "type": "file"
+    },
+    {
+      "path": "plugins\\ticketpilot-claudecode\\commands\\tp\\status.md",
+      "accessCount": 2,
+      "lastAccessed": 1778915138927,
+      "type": "file"
+    },
+    {
+      "path": "plugins\\ticketpilot-claudecode\\commands\\tp\\cancel.md",
+      "accessCount": 2,
+      "lastAccessed": 1778915179664,
+      "type": "file"
+    },
+    {
+      "path": "plugins\\ticketpilot-claudecode\\commands\\tp\\resume.md",
+      "accessCount": 2,
+      "lastAccessed": 1778915193174,
+      "type": "file"
+    },
+    {
+      "path": "plugins\\ticketpilot-claudecode\\commands\\tp\\trace.md",
+      "accessCount": 2,
+      "lastAccessed": 1778915206451,
+      "type": "file"
+    },
+    {
+      "path": "plugins\\ticketpilot-claudecode\\commands\\tp\\plan.md",
+      "accessCount": 2,
+      "lastAccessed": 1778915219479,
+      "type": "file"
+    },
+    {
+      "path": "plugins\\ticketpilot-claudecode\\commands\\tp\\init-project.md",
+      "accessCount": 2,
+      "lastAccessed": 1778915237118,
+      "type": "file"
+    },
+    {
+      "path": "plugins\\ticketpilot-claudecode\\scripts\\hud.js",
+      "accessCount": 1,
+      "lastAccessed": 1778915165868,
+      "type": "file"
     }
   ],
   "userDirectives": []

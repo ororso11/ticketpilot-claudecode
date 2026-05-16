@@ -1,8 +1,8 @@
 # /tp:status
 
-Show the current TicketPilot workflow state.
+현재 TicketPilot 워크플로우 상태를 표시합니다.
 
-## Usage
+## 사용법
 
 ```
 /tp:status
@@ -10,67 +10,67 @@ Show the current TicketPilot workflow state.
 
 ---
 
-## What This Command Does
+## 실행 순서
 
-Read `.ticketpilot/state/current-ticket.json` and display a human-readable summary.
+`.ticketpilot/state/current-ticket.json` 을 읽어 상태를 표시.
 
-### If no state file exists
-
-Show:
-```
-No active TicketPilot workflow found.
-Run /tp:start <ticketKey> to begin working on a Jira ticket.
-```
-
-### If state file exists
-
-Display all of the following:
+### 상태 파일 없는 경우
 
 ```
-Current Ticket Workflow
-───────────────────────
-Ticket:      <ticketKey>
-Phase:       <phase>
-Risk Level:  <riskLevel>
-Branch:      <branch or "none">
-Updated:     <updatedAt>
-
-Artifacts:
-  ✓ ticketAnalysis:       <path>
-  ✓ implementationPlan:   <path>
-  ✓ impactAnalysis:       <path>
-  – testReport:           not generated
-  – reviewReport:         not generated
-
-Approval:
-  planApproved:           <true/false>
-  editApproved:           <false — v0.1 read-only>
-
-Changed Files:
-  <list or "none">
-
-Test Results:
-  Status: <skipped/pending/passed/failed>
-  Attempts: <n>
+활성 워크플로우가 없습니다.
+/tp:start <티켓키> 로 Jira 티켓 작업을 시작하세요.
 ```
 
-### Phase descriptions
+### 상태 파일 있는 경우
 
-| Phase | Meaning |
-|-------|---------|
-| `initialized` | Ticket loaded, no analysis yet |
-| `analyzed` | Ticket analysis complete |
-| `planned` | Implementation plan generated |
-| `approved` | User approved the plan |
-| `implementing` | Code changes in progress (v0.2+) |
-| `testing` | Tests running (v0.2+) |
-| `reviewing` | Review in progress (v0.2+) |
-| `done` | Workflow complete |
+```
+현재 티켓 워크플로우
+─────────────────────────────────
+티켓:      {ticketKey}
+단계:      {phase} — {단계 설명}
+위험도:    {riskLevel}
+브랜치:    {branch 또는 "없음"}
+업데이트:  {updatedAt}
 
-### Next action suggestion
+아티팩트:
+  ✓ 티켓 분석:    {path}
+  ✓ 구현 계획:    {path}
+  ✓ 영향 분석:    {path}
+  – 테스트 리포트: 미생성
+  – 검토 리포트:   미생성
 
-Based on the current phase, suggest the appropriate next step:
-- `initialized` → Run `/tp:start <ticketKey>` to generate artifacts
-- `planned` → Review artifacts and approve the plan
-- `approved` → (v0.2+) Proceed with implementation
-- `done` → Workflow complete
+승인 상태:
+  계획 승인:   {예/아니오}
+  코드 변경:   비활성 (v0.1 읽기전용)
+
+변경된 파일:
+  {목록 또는 "없음"}
+
+테스트:
+  상태: {건너뜀/대기중/통과/실패}
+  시도: {n}회
+```
+
+### 단계 설명
+
+| 단계 | 설명 |
+|------|------|
+| `initialized` | 티켓 로드됨, 분석 전 |
+| `analyzed` | 티켓 분석 완료 |
+| `planned` | 구현 계획 생성 완료 |
+| `approved` | 사용자가 계획 승인함 |
+| `implementing` | 코드 변경 진행중 (v0.2+) |
+| `testing` | 테스트 실행중 (v0.2+) |
+| `reviewing` | 검토 진행중 (v0.2+) |
+| `done` | 워크플로우 완료 |
+| `cancelled` | 취소됨 |
+
+### 단계별 다음 단계 안내
+
+| 단계 | 안내 |
+|------|------|
+| `initialized` | `/tp:start <티켓키>` 실행하여 분석 시작 |
+| `planned` | 아티팩트 검토 후 계획 승인 |
+| `approved` | (v0.2+) 구현 시작 |
+| `done` | 워크플로우 완료 |
+| `cancelled` | `/tp:start <티켓키>` 로 새로 시작 |

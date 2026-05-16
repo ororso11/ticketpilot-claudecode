@@ -1,8 +1,8 @@
 # /tp:resume
 
-Resume a TicketPilot workflow from a previous session.
+이전 세션의 TicketPilot 워크플로우를 이어서 진행합니다.
 
-## Usage
+## 사용법
 
 ```
 /tp:resume
@@ -10,63 +10,60 @@ Resume a TicketPilot workflow from a previous session.
 
 ---
 
-## What This Command Does
+## 동작 방식
 
-Restore context from a previous session and continue from where you left off.
+세션 재시작 또는 컨텍스트 압축 후 이전 작업을 복원합니다.
 
-### Step 1 — Read State
+### Step 1 — 상태 읽기
 
-Load `.ticketpilot/state/current-ticket.json`.
+`.ticketpilot/state/current-ticket.json` 로드.
 
-If not found, say:
+없으면:
 ```
-No saved TicketPilot workflow found.
-Run /tp:start <ticketKey> to begin a new workflow.
-```
-
-### Step 2 — Read Artifacts
-
-For each artifact path recorded in the state, read and summarize the file:
-- `ticket-analysis.md` — Show the ticket summary and acceptance criteria
-- `implementation-plan.md` — Show the proposed changes and current status
-- `impact-analysis.md` — Show risk level and impacted areas
-
-If an artifact file is missing (path is recorded but file does not exist), warn the user:
-```
-⚠ Artifact missing: <path>
-  This may have been deleted or moved. Run /tp:start <ticketKey> to regenerate.
+저장된 TicketPilot 워크플로우가 없습니다.
+/tp:start <티켓키> 로 새 워크플로우를 시작하세요.
 ```
 
-### Step 3 — Summarize Context
+### Step 2 — 아티팩트 읽기
 
-Display:
+상태에 기록된 아티팩트 파일 읽고 요약:
+- `ticket-analysis.md` — 티켓 요약 및 인수 조건
+- `implementation-plan.md` — 제안된 변경사항 및 현재 상태
+- `impact-analysis.md` — 위험도 및 영향 범위
+
+아티팩트 파일 없으면:
 ```
-Resuming workflow for: <ticketKey>
-Phase: <phase>
-Risk Level: <riskLevel>
-
-Previous session summary:
-- Ticket: <summary>
-- Acceptance Criteria: <n> items identified
-- Implementation Plan: <proposed changes summary>
-- Changed Files: <n> files (or none in v0.1)
+⚠ 아티팩트 없음: <경로>
+  삭제되었거나 이동된 것 같습니다. /tp:start <티켓키> 로 재생성하세요.
 ```
 
-### Step 4 — Suggest Next Steps
+### Step 3 — 컨텍스트 요약
 
-Based on `phase` and `approval` status, suggest what to do next:
+```
+워크플로우 복원: <ticketKey>
+단계: <단계>
+위험도: <위험도>
 
-| Condition | Suggestion |
-|-----------|------------|
-| `phase = planned`, no approval | "Review the implementation plan and confirm you want to proceed" |
-| `phase = planned`, plan approved | "(v0.2+) Implementation is approved — ready to begin code changes" |
-| `phase = done` | "This ticket workflow is complete" |
-| Missing Jira credentials | "Set Jira env vars and run `/tp:start` again to refresh the ticket data" |
+이전 세션 요약:
+- 티켓: <제목>
+- 인수 조건: <n>개 확인됨
+- 구현 계획: <변경사항 요약>
+- 변경 파일: <n>개 (v0.1에서는 없음)
+```
+
+### Step 4 — 다음 단계 안내
+
+| 조건 | 안내 |
+|------|------|
+| 단계: 계획완료, 미승인 | 구현 계획을 검토하고 진행 여부를 결정하세요 |
+| 단계: 계획완료, 승인됨 | (v0.2+) 구현을 시작할 준비가 됐습니다 |
+| 단계: 완료 | 이 티켓 워크플로우는 완료됐습니다 |
+| Jira 인증 없음 | 환경변수 설정 후 `/tp:start` 로 티켓 데이터 새로고침 |
 
 ---
 
-## Notes
+## 규칙
 
-- This command is safe to run at any time — it only reads files, never writes.
-- It is especially useful after a Claude Code session compaction or restart.
-- If you need fresh data from Jira, run `/tp:start <ticketKey>` instead.
+- 이 명령은 파일을 읽기만 합니다. 절대 쓰지 않습니다.
+- 세션 재시작 후 특히 유용합니다.
+- Jira에서 최신 데이터가 필요하면 `/tp:start <티켓키>` 를 실행하세요.

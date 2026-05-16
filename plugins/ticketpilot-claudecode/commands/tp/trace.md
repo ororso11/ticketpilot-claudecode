@@ -1,8 +1,8 @@
 # /tp:trace
 
-Show the TicketPilot workflow event timeline.
+TicketPilot 워크플로우 이벤트 타임라인을 표시합니다.
 
-## Usage
+## 사용법
 
 ```
 /tp:trace
@@ -10,86 +10,76 @@ Show the TicketPilot workflow event timeline.
 
 ---
 
-## What This Command Does
+## 동작 방식
 
-Read `.ticketpilot/logs/trace.jsonl` and display the workflow timeline in a human-readable format.
+`.ticketpilot/logs/trace.jsonl` 을 읽어 타임라인을 표시합니다.
 
-### Step 1 — Read Current State
+### Step 1 — 현재 상태 읽기
 
-If `.ticketpilot/state/current-ticket.json` exists, show the current context at the top:
+`.ticketpilot/state/current-ticket.json` 존재 시 상단에 표시:
 
 ```
-Current ticket: PROJ-123
-Phase: planned | Risk: medium | Mode: plan
+현재 티켓: PROJ-123
+단계: 계획완료 | 위험도: 보통 | 모드: 계획
 ```
 
-### Step 2 — Read Trace Events
+### Step 2 — 이벤트 읽기
 
-Parse `.ticketpilot/logs/trace.jsonl` (one JSON object per line).
+`trace.jsonl` 파싱 (한 줄에 JSON 객체 하나):
 
-Each line has the shape:
 ```json
 {
   "timestamp": "2026-05-16T13:02:00.000Z",
   "event": "ticket_loaded",
   "ticketKey": "PROJ-123",
-  "phase": "ticket_loaded",
-  "message": "Loaded Jira ticket PROJ-123"
+  "message": "PROJ-123 티켓 로드됨"
 }
 ```
 
-### Step 3 — Display Timeline
+### Step 3 — 타임라인 출력
 
-Format and display the last 50 events (most recent last):
-
-```
-TicketPilot Trace
-
-Current ticket: PROJ-123
-Phase: planned | Risk: medium | Mode: plan
-
-[2026-05-16 13:02] setup completed
-[2026-05-16 13:03] PROJ-123 ticket loaded
-                     Loaded Jira ticket PROJ-123: Fix login redirect bug
-[2026-05-16 13:04] PROJ-123 ticket analysis generated
-[2026-05-16 13:04] PROJ-123 implementation plan generated
-[2026-05-16 13:05] PROJ-123 state saved
-[2026-05-16 13:05] PROJ-123 waiting for approval
-```
-
-### If No Trace File Exists
+최근 50개 이벤트 표시 (오래된 것부터):
 
 ```
-No trace events recorded yet.
-Events are recorded as you run TicketPilot commands.
-Start with: /tp:setup or /tp:start PROJ-123
+TicketPilot 타임라인
+
+현재 티켓: PROJ-123 | 단계: 계획완료 | 위험도: 보통
+
+[2026-05-16 13:02] 셋업 완료
+[2026-05-16 13:03] PROJ-123 티켓 로드됨
+                     Jira 티켓 PROJ-123 로드: 로그인 리다이렉트 버그 수정
+[2026-05-16 13:04] PROJ-123 티켓 분석 생성됨
+[2026-05-16 13:04] PROJ-123 구현 계획 생성됨
+[2026-05-16 13:05] PROJ-123 상태 저장됨
+[2026-05-16 13:05] PROJ-123 승인 대기중
 ```
 
-### Event Type Reference
+### 트레이스 파일 없는 경우
 
-| Event | Meaning |
-|-------|---------|
-| `setup_completed` | Setup wizard ran |
-| `project_initialized` | /tp:init-project ran |
-| `ticket_loaded` | Jira ticket fetched |
-| `ticket_analysis_generated` | ticket-analysis.md created |
-| `ticket_prd_generated` | ticket-prd.json created |
-| `implementation_plan_generated` | implementation-plan.md created |
-| `impact_analysis_generated` | impact-analysis.md created |
-| `state_saved` | current-ticket.json updated |
-| `waiting_for_approval` | Waiting for user review |
-| `cancelled` | Workflow cancelled |
-| `force_cancelled` | Workflow force-reset |
-| `resumed` | Session resumed |
-| `doctor_completed` | Doctor check ran |
-| `pre_compact_saved` | Pre-compact hook fired |
-| `session_started` | Claude Code session began |
-| `session_stopped` | Claude Code session ended |
+```
+아직 기록된 이벤트가 없습니다.
+TicketPilot 명령을 실행하면 이벤트가 기록됩니다.
+시작: /tp:setup 또는 /tp:start PROJ-123
+```
+
+### 이벤트 타입 참고
+
+| 이벤트 | 의미 |
+|--------|------|
+| `setup_completed` | 셋업 마법사 실행됨 |
+| `ticket_loaded` | Jira 티켓 가져옴 |
+| `ticket_analysis_generated` | ticket-analysis.md 생성됨 |
+| `implementation_plan_generated` | implementation-plan.md 생성됨 |
+| `impact_analysis_generated` | impact-analysis.md 생성됨 |
+| `state_saved` | current-ticket.json 업데이트됨 |
+| `waiting_for_approval` | 사용자 검토 대기중 |
+| `cancelled` | 워크플로우 취소됨 |
+| `force_cancelled` | 워크플로우 강제 초기화됨 |
+| `resumed` | 세션 복원됨 |
 
 ---
 
-## Notes
+## 규칙
 
-- Read-only: this command never writes files.
-- The trace log is append-only and grows over time. Use `--limit` (CLI) to cap display length.
-- Trace data stays local and is never transmitted externally.
+- 읽기 전용: 파일을 절대 수정하지 않음
+- 트레이스 데이터는 로컬에만 저장, 외부 전송 없음

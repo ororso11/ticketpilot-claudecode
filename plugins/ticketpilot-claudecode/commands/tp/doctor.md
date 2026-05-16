@@ -1,8 +1,8 @@
 # /tp:doctor
 
-Diagnose TicketPilot installation, configuration, and connectivity.
+TicketPilot 설치, 설정, 연결 상태를 진단합니다.
 
-## Usage
+## 사용법
 
 ```
 /tp:doctor
@@ -10,85 +10,70 @@ Diagnose TicketPilot installation, configuration, and connectivity.
 
 ---
 
-## What This Command Does
+## 실행 순서
 
-Run a comprehensive health check and display results as `OK` / `WARN` / `FAIL`.
+아래 항목을 순서대로 점검하고 `✓ 정상` / `⚠ 경고` / `✗ 실패` 로 표시:
 
-### Checks to Perform
+| 점검 항목 | 방법 | 기대값 |
+|---------|------|--------|
+| Node.js 버전 | `node --version` | >= 20 |
+| `.ticketpilot/` 디렉토리 | 존재 여부 확인 | 있음 |
+| `.ticketpilot/state/` | 읽기/쓰기 가능 | 있음 |
+| `.ticketpilot/artifacts/` | 읽기/쓰기 가능 | 있음 |
+| `.ticketpilot/logs/` | 읽기/쓰기 가능 | 있음 |
+| `JIRA_BASE_URL` | 환경변수 설정 여부 | 설정됨 |
+| `JIRA_EMAIL` | 환경변수 설정 여부 | 설정됨 |
+| `JIRA_API_TOKEN` | 환경변수 설정 여부 | 설정됨 |
+| Jira 연결 | `GET /rest/api/3/myself` | HTTP 200 |
+| 현재 워크플로우 | state/current-ticket.json | 유효하거나 없음 |
 
-| Check | Method | Expected |
-|-------|--------|----------|
-| Node.js version | `node --version` | >= 20 |
-| ticketpilot CLI | `ticketpilot --version` | installed and executable |
-| `.ticketpilot/config.json` | File exists | present |
-| `.ticketpilot/state/` | Directory readable/writable | exists |
-| `.ticketpilot/artifacts/` | Directory readable/writable | exists |
-| `.ticketpilot/logs/` | Directory readable/writable | exists |
-| `JIRA_BASE_URL` | env var | set |
-| `JIRA_EMAIL` | env var | set |
-| `JIRA_API_TOKEN` | env var | set |
-| Jira connection | `GET /rest/api/3/myself` | 200 OK |
-| `current-ticket.json` | JSON parseable | valid or absent |
-| Claude Code plugin | Plugin installed | present |
-
-### Output Format
+### 출력 형식
 
 ```
-TicketPilot Doctor
+TicketPilot 진단 결과
+─────────────────────────────────
+  ✓ Node.js 버전           v22.3.0 (>= 20 필요)
+  ✓ .ticketpilot/          존재
+  ✓ .ticketpilot/state/    읽기/쓰기 가능
+  ✓ .ticketpilot/artifacts/ 읽기/쓰기 가능
+  ✓ .ticketpilot/logs/     읽기/쓰기 가능
+  ✓ JIRA_BASE_URL          설정됨
+  ✓ JIRA_EMAIL             설정됨
+  ✓ JIRA_API_TOKEN         설정됨
+  ✓ Jira 연결              성공 — 홍길동 으로 로그인됨
+  ✓ 현재 워크플로우         PROJ-123 (단계: 계획완료)
 
-  ✓ Node.js version          v22.3.0 (>= 20 required)
-  ✓ ticketpilot CLI          0.1.0
-  ✓ .ticketpilot/config.json present
-  ✓ .ticketpilot/state/      readable/writable
-  ✓ .ticketpilot/artifacts/  readable/writable
-  ✓ .ticketpilot/logs/       readable/writable
-  ✓ JIRA_BASE_URL            set
-  ✓ JIRA_EMAIL               set
-  ✓ JIRA_API_TOKEN           set
-  ✓ Jira connection          Connected as Jane Doe
-  ✓ current-ticket.json      valid (PROJ-123, phase: planned)
-  ⚠ Claude Code plugin       not detected (install via /plugin install ...)
-
-1 warning. Run the suggested fixes above.
+모두 정상입니다.
 ```
 
-### For Each FAIL or WARN Item
+### 실패/경고 항목별 해결방법
 
-Show a one-line fix:
-
-| Issue | Fix |
-|-------|-----|
+| 문제 | 해결 방법 |
+|------|---------|
 | Node.js < 20 | `nvm install 20 && nvm use 20` |
-| CLI not found | `npm i -g ticketpilot-claudecode@latest` |
-| Config missing | `ticketpilot init` |
-| Dir missing | `ticketpilot init` |
-| Env var missing | `export JIRA_BASE_URL=...` |
-| Jira auth failed | Regenerate token at Atlassian |
-| State corrupted | `ticketpilot cancel --force` |
-| Plugin missing | `/plugin install ticketpilot-claudecode@ticketpilot-claudecode-marketplace` |
+| 디렉토리 없음 | `/tp:setup` 실행 |
+| 환경변수 없음 | `/tp:setup` 실행 후 안내 따르기 |
+| Jira 인증 실패 | Atlassian에서 API 토큰 재발급 |
+| 상태 파일 손상 | `.ticketpilot/state/current-ticket.json` 삭제 후 `/tp:start` 재실행 |
 
-### Hooks and HUD Guidance
+### 환경변수 값은 절대 출력하지 말 것 (설정 여부만 표시)
 
-After checks, always show:
+### 점검 후 안내
 
 ```
-Hooks: Set TP_DISABLE=1 to disable all hooks. TP_SKIP_HOOKS=PreToolUse,PostToolUse to skip specific hooks.
-HUD:   Add {"statusLine": {"type": "command", "command": "ticketpilot hud"}} to Claude Code settings.json
-```
+─────────────────────────────────
+HUD: settings.json 에 아래 추가 시 상태바 활성화:
+  {"statusLine": {"type": "command", "command": "node ~/.claude/plugins/ticketpilot-claudecode-marketplace/ticketpilot-claudecode/scripts/hud.js"}}
 
-### Next Steps
-
-```
-Recommended next commands:
-  ticketpilot jira test     — verify Jira connection
-  /tp:init-project          — analyze your project
-  /tp:start PROJ-123        — start a ticket workflow
+다음 추천 명령:
+  /tp:setup        — 초기 설정
+  /tp:start PROJ-123 — 티켓 워크플로우 시작
 ```
 
 ---
 
-## Notes
+## 규칙
 
-- Does NOT modify any files.
-- Does NOT post to Jira.
-- Credential values are never displayed.
+- 파일을 수정하지 않음
+- Jira에 아무것도 전송하지 않음
+- 환경변수 값 출력 금지
