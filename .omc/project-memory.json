@@ -228,10 +228,22 @@
       "type": "file"
     },
     {
+      "path": "plugins\\ticketpilot-claudecode\\commands\\tp\\config.md",
+      "accessCount": 2,
+      "lastAccessed": 1778975416412,
+      "type": "file"
+    },
+    {
       "path": "plugins\\ticketpilot-claudecode\\scripts\\hud.js",
       "accessCount": 1,
       "lastAccessed": 1778915165868,
       "type": "file"
+    },
+    {
+      "path": "plugins\\ticketpilot-claudecode\\commands",
+      "accessCount": 1,
+      "lastAccessed": 1778975427969,
+      "type": "directory"
     }
   ],
   "userDirectives": []

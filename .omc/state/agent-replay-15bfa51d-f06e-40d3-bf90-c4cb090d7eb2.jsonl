@@ -19,3 +19,4 @@
 {"t":0,"agent":"system","event":"keyword_detected","keyword":"autopilot"}
 {"t":0,"agent":"system","event":"mode_change","mode_from":"none","mode_to":"autopilot"}
 {"t":0,"agent":"af426d3","agent_type":"unknown","event":"agent_stop","success":true}
+{"t":0,"agent":"a464343","agent_type":"unknown","event":"agent_stop","success":true}
