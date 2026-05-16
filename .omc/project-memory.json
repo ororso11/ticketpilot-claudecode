@@ -1,0 +1,172 @@
+{
+  "version": "1.0.0",
+  "lastScanned": 1778911757240,
+  "projectRoot": "C:\\Users\\LG\\ticketpilot-claudecode",
+  "techStack": {
+    "languages": [
+      {
+        "name": "JavaScript/TypeScript",
+        "version": ">=20",
+        "confidence": "high",
+        "markers": [
+          "package.json"
+        ]
+      }
+    ],
+    "frameworks": [],
+    "packageManager": "pnpm",
+    "runtime": "Node.js 20"
+  },
+  "build": {
+    "buildCommand": "pnpm build",
+    "testCommand": null,
+    "lintCommand": "pnpm lint",
+    "devCommand": "pnpm dev",
+    "scripts": {
+      "build": "pnpm -r build",
+      "dev": "pnpm -r dev",
+      "lint": "pnpm -r lint",
+      "clean": "pnpm -r clean"
+    }
+  },
+  "conventions": {
+    "namingStyle": null,
+    "importStyle": null,
+    "testPattern": null,
+    "fileOrganization": null
+  },
+  "structure": {
+    "isMonorepo": true,
+    "workspaces": [],
+    "mainDirectories": [
+      "docs",
+      "examples"
+    ],
+    "gitBranches": null
+  },
+  "customNotes": [],
+  "directoryMap": {
+    "docs": {
+      "path": "docs",
+      "purpose": "Documentation",
+      "fileCount": 7,
+      "lastAccessed": 1778911757166,
+      "keyFiles": [
+        "configuration.md",
+        "installation.md",
+        "jira.md",
+        "marketplace.md",
+        "npm-cli.md"
+      ]
+    },
+    "examples": {
+      "path": "examples",
+      "purpose": "Example code",
+      "fileCount": 0,
+      "lastAccessed": 1778911757188,
+      "keyFiles": []
+    },
+    "packages": {
+      "path": "packages",
+      "purpose": null,
+      "fileCount": 0,
+      "lastAccessed": 1778911757189,
+      "keyFiles": []
+    },
+    "plugins": {
+      "path": "plugins",
+      "purpose": null,
+      "fileCount": 0,
+      "lastAccessed": 1778911757190,
+      "keyFiles": []
+    },
+    "templates": {
+      "path": "templates",
+      "purpose": null,
+      "fileCount": 7,
+      "lastAccessed": 1778911757191,
+      "keyFiles": [
+        "impact-analysis.md",
+        "implementation-plan.md",
+        "jira-comment.md",
+        "pr-description.md",
+        "review-report.md"
+      ]
+    }
+  },
+  "hotPaths": [
+    {
+      "path": "packages\\cli\\package.json",
+      "accessCount": 3,
+      "lastAccessed": 1778912348748,
+      "type": "file"
+    },
+    {
+      "path": "",
+      "accessCount": 3,
+      "lastAccessed": 1778912364902,
+      "type": "directory"
+    },
+    {
+      "path": ".claude-plugin\\marketplace.json",
+      "accessCount": 2,
+      "lastAccessed": 1778912335230,
+      "type": "file"
+    },
+    {
+      "path": "CONTRIBUTING.md",
+      "accessCount": 2,
+      "lastAccessed": 1778912339600,
+      "type": "file"
+    },
+    {
+      "path": "SECURITY.md",
+      "accessCount": 2,
+      "lastAccessed": 1778912343490,
+      "type": "file"
+    },
+    {
+      "path": "docs\\marketplace.md",
+      "accessCount": 2,
+      "lastAccessed": 1778912344568,
+      "type": "file"
+    },
+    {
+      "path": "README.md",
+      "accessCount": 2,
+      "lastAccessed": 1778912345545,
+      "type": "file"
+    },
+    {
+      "path": "plugins\\ticketpilot-claudecode\\README.md",
+      "accessCount": 2,
+      "lastAccessed": 1778912346651,
+      "type": "file"
+    },
+    {
+      "path": "plugins\\ticketpilot-claudecode\\.claude-plugin\\plugin.json",
+      "accessCount": 2,
+      "lastAccessed": 1778912356353,
+      "type": "file"
+    },
+    {
+      "path": "docs\\security.md",
+      "accessCount": 1,
+      "lastAccessed": 1778912309010,
+      "type": "file"
+    },
+    {
+      "path": "docs\\npm-cli.md",
+      "accessCount": 1,
+      "lastAccessed": 1778912313182,
+      "type": "file"
+    },
+    {
+      "path": "docs\\installation.md",
+      "accessCount": 1,
+      "lastAccessed": 1778912314173,
+      "type": "file"
+    }
+  ],
+  "userDirectives": []
+}

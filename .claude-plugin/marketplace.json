@@ -1,0 +1,22 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "ticketpilot-claudecode-marketplace",
+  "description": "Claude Code plugins for Jira ticket-driven development automation",
+  "owner": {
+    "name": "TicketPilot",
+    "email": "opensource@ticketpilot.dev"
+  },
+  "plugins": [
+    {
+      "name": "ticketpilot-claudecode",
+      "description": "Turn Jira tickets into Claude Code workflows: analysis, planning, implementation, testing, review, and delivery artifacts.",
+      "version": "0.1.0",
+      "author": {
+        "name": "TicketPilot"
+      },
+      "category": "development",
+      "source": "./plugins/ticketpilot-claudecode",
+      "homepage": "https://github.com/ororso135055/ticketpilot-claudecode"
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "command": "node .claude-plugin/hooks/scripts/on-session-start.js",
+        "description": "Check .ticketpilot state on session start"
+      }
+    ],
+    "PreToolUse": [
+      {
+        "command": "node .claude-plugin/hooks/scripts/pre-tool-guard.js",
+        "description": "Guard against high-risk tool calls"
+      }
+    ],
+    "PostToolUse": [
+      {
+        "command": "node .claude-plugin/hooks/scripts/post-tool-state-save.js",
+        "description": "Auto-save state after tool use"
+      }
+    ],
+    "PreCompact": [
+      {
+        "command": "node .claude-plugin/hooks/scripts/pre-compact-save.js",
+        "description": "Preserve state and notepad before context compaction"
+      }
+    ],
+    "Stop": [
+      {
+        "command": "node .claude-plugin/hooks/scripts/on-stop-summary.js",
+        "description": "Log session summary on stop"
+      }
+    ]
+  },
+  "env": {
+    "TP_DISABLE": "Disable all TicketPilot hooks when set to 1",
+    "TP_SKIP_HOOKS": "Comma-separated list of hook names to skip (e.g. PreToolUse,PostToolUse)",
+    "TP_NOTIFY": "Enable notifications (0=disabled, 1=enabled; v0.3+)"
+  }
+}

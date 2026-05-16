@@ -1,0 +1,25 @@
+{
+  "$schema": "https://anthropic.com/claude-code/plugin.schema.json",
+  "name": "ticketpilot-claudecode",
+  "version": "0.1.0",
+  "description": "Jira ticket-driven development automation for Claude Code",
+  "author": {
+    "name": "TicketPilot",
+    "url": "https://github.com/ororso135055/ticketpilot-claudecode"
+  },
+  "homepage": "https://github.com/ororso135055/ticketpilot-claudecode",
+  "repository": "https://github.com/ororso135055/ticketpilot-claudecode",
+  "license": "Apache-2.0",
+  "keywords": [
+    "jira",
+    "ticket",
+    "claude-code",
+    "claudecode",
+    "plugin",
+    "agent",
+    "automation",
+    "development",
+    "testing",
+    "workflow"
+  ]
+}

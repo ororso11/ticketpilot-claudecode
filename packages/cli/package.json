@@ -1,0 +1,58 @@
+{
+  "name": "ticketpilot-claudecode",
+  "version": "0.1.0",
+  "description": "CLI/runtime for TicketPilot Claude Code plugin — Jira ticket-driven development automation",
+  "type": "module",
+  "bin": {
+    "ticketpilot": "./dist/cli.js",
+    "tp": "./dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx src/cli.ts",
+    "start": "node dist/cli.js",
+    "prepublishOnly": "npm run build",
+    "clean": "rm -rf dist"
+  },
+  "keywords": [
+    "claude-code",
+    "claudecode",
+    "jira",
+    "plugin",
+    "ticket",
+    "automation",
+    "developer-tools"
+  ],
+  "author": "TicketPilot",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ororso135055/ticketpilot-claudecode.git",
+    "directory": "packages/cli"
+  },
+  "homepage": "https://github.com/ororso135055/ticketpilot-claudecode",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "commander": "^12.0.0",
+    "dotenv": "^16.4.5",
+    "fs-extra": "^11.2.0",
+    "glob": "^10.4.5",
+    "minimatch": "^9.0.5",
+    "picocolors": "^1.0.1",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^11.0.4",
+    "@types/node": "^22.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
