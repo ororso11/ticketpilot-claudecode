@@ -166,6 +166,12 @@
       "accessCount": 2,
       "lastAccessed": 1778912462130,
       "type": "file"
+    },
+    {
+      "path": "plugins\\ticketpilot-claudecode",
+      "accessCount": 2,
+      "lastAccessed": 1778913848324,
+      "type": "directory"
     }
   ],
   "userDirectives": []

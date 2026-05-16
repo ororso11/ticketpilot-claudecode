@@ -1,7 +1,7 @@
 {
   "tool_name": "Bash",
-  "tool_input_preview": "{\"command\":\"grep -r \\\"ororso135055\\\" C:\\\\Users\\\\LG\\\\ticketpilot-claudecode --include=\\\"*.json\\\" --include=\\\"*.md\\\" -l\",\"description\":\"Find files with wrong username\"}",
-  "error": "Exit code 2\ngrep: C:UsersLGticketpilot-claudecode: No such file or directory",
-  "timestamp": "2026-05-16T06:20:33.715Z",
-  "retry_count": 2
+  "tool_input_preview": "{\"command\":\"ls \\\"C:\\\\Users\\\\LG\\\\ticketpilot-claudecode\\\\plugins\\\\ticketpilot-claudecode\\\\commands\\\\\\\"\",\"description\":\"List TicketPilot command files\"}",
+  "error": "Exit code 2\n/usr/bin/bash: eval: line 1: unexpected EOF while looking for matching `\"'",
+  "timestamp": "2026-05-16T06:24:54.754Z",
+  "retry_count": 1
 }
