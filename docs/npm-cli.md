@@ -95,7 +95,7 @@ TicketPilot [PROJ-123] | phase: planned | risk: medium | mode: plan | next: appr
 ## Local development
 
 ```bash
-git clone https://github.com/ororso135055/ticketpilot-claudecode
+git clone https://github.com/ororso11/ticketpilot-claudecode
 cd ticketpilot-claudecode
 pnpm install
 pnpm build

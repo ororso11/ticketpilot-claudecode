@@ -1,7 +1,7 @@
 {
-  "tool_name": "PowerShell",
-  "tool_input_preview": "{\"command\":\"cd C:\\\\Users\\\\LG\\\\ticketpilot-claudecode; pnpm build 2>&1\",\"timeout\":120000,\"description\":\"Build all workspace packages\"}",
-  "error": "Exit code 2\n$ pnpm -r build\n$ tsc\nsrc/cancel.ts(48,6): error TS2352: Conversion of type 'WorkflowState' to type 'Record<string, unknown>' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.\r\n  Index signature for type 'string' is missing in type 'WorkflowState'.\r\nsrc/hud.ts(14,17): error TS2352: Conversion of type 'WorkflowState' to type 'Record<string, unknown>' may be a mistake because neither type suff...",
-  "timestamp": "2026-05-16T05:54:22.159Z",
-  "retry_count": 1
+  "tool_name": "Bash",
+  "tool_input_preview": "{\"command\":\"grep -r \\\"ororso135055\\\" C:\\\\Users\\\\LG\\\\ticketpilot-claudecode --include=\\\"*.json\\\" --include=\\\"*.md\\\" -l\",\"description\":\"Find files with wrong username\"}",
+  "error": "Exit code 2\ngrep: C:UsersLGticketpilot-claudecode: No such file or directory",
+  "timestamp": "2026-05-16T06:20:33.715Z",
+  "retry_count": 2
 }

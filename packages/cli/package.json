@@ -32,10 +32,10 @@
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ororso135055/ticketpilot-claudecode.git",
+    "url": "https://github.com/ororso11/ticketpilot-claudecode.git",
     "directory": "packages/cli"
   },
-  "homepage": "https://github.com/ororso135055/ticketpilot-claudecode",
+  "homepage": "https://github.com/ororso11/ticketpilot-claudecode",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.0",
     "commander": "^12.0.0",

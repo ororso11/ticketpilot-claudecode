@@ -14,7 +14,7 @@ Install the plugin, run `/tp:setup`, then start with `/tp:start PROJ-123`.
 ### 1. Install the plugin
 
 ```
-/plugin marketplace add https://github.com/ororso135055/ticketpilot-claudecode
+/plugin marketplace add https://github.com/ororso11/ticketpilot-claudecode
 /plugin install ticketpilot-claudecode@ticketpilot-claudecode-marketplace
 ```
 

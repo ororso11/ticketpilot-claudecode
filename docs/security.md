@@ -64,6 +64,6 @@ All data is local — nothing is sent to TicketPilot servers:
 ## Reporting Vulnerabilities
 
 Open a private GitHub Security Advisory:
-`https://github.com/ororso135055/ticketpilot-claudecode/security/advisories/new`
+`https://github.com/ororso11/ticketpilot-claudecode/security/advisories/new`
 
 We aim to respond within 72 hours and patch within 14 days.

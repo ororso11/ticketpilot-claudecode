@@ -6,7 +6,7 @@ Thank you for your interest in contributing!
 
 ```bash
 # Prerequisites: Node.js >= 20, pnpm >= 9
-git clone https://github.com/ororso135055/ticketpilot-claudecode.git
+git clone https://github.com/ororso11/ticketpilot-claudecode.git
 cd ticketpilot-claudecode
 pnpm install
 pnpm build

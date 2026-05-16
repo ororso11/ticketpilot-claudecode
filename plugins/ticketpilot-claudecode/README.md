@@ -5,7 +5,7 @@ Turn Jira tickets into Claude Code workflows — analysis, planning, and deliver
 ## Install
 
 ```
-/plugin marketplace add https://github.com/ororso135055/ticketpilot-claudecode
+/plugin marketplace add https://github.com/ororso11/ticketpilot-claudecode
 /plugin install ticketpilot-claudecode@ticketpilot-claudecode-marketplace
 ```
 

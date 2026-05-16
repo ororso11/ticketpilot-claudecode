@@ -3,7 +3,7 @@
 ## Installing from Claude Code
 
 ```
-/plugin marketplace add https://github.com/ororso135055/ticketpilot-claudecode
+/plugin marketplace add https://github.com/ororso11/ticketpilot-claudecode
 /plugin install ticketpilot-claudecode@ticketpilot-claudecode-marketplace
 ```
 

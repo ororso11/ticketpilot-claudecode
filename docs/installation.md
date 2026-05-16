@@ -5,7 +5,7 @@
 ### 1. Add marketplace
 
 ```
-/plugin marketplace add https://github.com/ororso135055/ticketpilot-claudecode
+/plugin marketplace add https://github.com/ororso11/ticketpilot-claudecode
 ```
 
 ### 2. Install plugin

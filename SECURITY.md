@@ -30,7 +30,7 @@ The following paths are classified as **high-risk** and trigger an approval gate
 
 Please report security vulnerabilities by opening a **private** GitHub Security Advisory at:
 
-`https://github.com/ororso135055/ticketpilot-claudecode/security/advisories/new`
+`https://github.com/ororso11/ticketpilot-claudecode/security/advisories/new`
 
 Do **not** open public issues for security vulnerabilities.
 

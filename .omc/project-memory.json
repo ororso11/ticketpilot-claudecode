@@ -96,75 +96,75 @@
   },
   "hotPaths": [
     {
-      "path": "packages\\cli\\package.json",
-      "accessCount": 3,
-      "lastAccessed": 1778912348748,
-      "type": "file"
-    },
-    {
       "path": "",
-      "accessCount": 3,
-      "lastAccessed": 1778912364902,
+      "accessCount": 4,
+      "lastAccessed": 1778912438133,
       "type": "directory"
     },
     {
+      "path": "packages\\cli\\package.json",
+      "accessCount": 4,
+      "lastAccessed": 1778912458135,
+      "type": "file"
+    },
+    {
       "path": ".claude-plugin\\marketplace.json",
-      "accessCount": 2,
-      "lastAccessed": 1778912335230,
+      "accessCount": 3,
+      "lastAccessed": 1778912450116,
       "type": "file"
     },
     {
       "path": "CONTRIBUTING.md",
-      "accessCount": 2,
-      "lastAccessed": 1778912339600,
+      "accessCount": 3,
+      "lastAccessed": 1778912452861,
       "type": "file"
     },
     {
       "path": "SECURITY.md",
-      "accessCount": 2,
-      "lastAccessed": 1778912343490,
+      "accessCount": 3,
+      "lastAccessed": 1778912453884,
       "type": "file"
     },
     {
       "path": "docs\\marketplace.md",
-      "accessCount": 2,
-      "lastAccessed": 1778912344568,
+      "accessCount": 3,
+      "lastAccessed": 1778912454862,
       "type": "file"
     },
     {
       "path": "README.md",
-      "accessCount": 2,
-      "lastAccessed": 1778912345545,
+      "accessCount": 3,
+      "lastAccessed": 1778912455928,
       "type": "file"
     },
     {
       "path": "plugins\\ticketpilot-claudecode\\README.md",
-      "accessCount": 2,
-      "lastAccessed": 1778912346651,
+      "accessCount": 3,
+      "lastAccessed": 1778912457038,
       "type": "file"
     },
     {
       "path": "plugins\\ticketpilot-claudecode\\.claude-plugin\\plugin.json",
-      "accessCount": 2,
-      "lastAccessed": 1778912356353,
-      "type": "file"
-    },
-    {
-      "path": "docs\\security.md",
-      "accessCount": 1,
-      "lastAccessed": 1778912309010,
-      "type": "file"
-    },
-    {
-      "path": "docs\\npm-cli.md",
-      "accessCount": 1,
-      "lastAccessed": 1778912313182,
+      "accessCount": 3,
+      "lastAccessed": 1778912459180,
       "type": "file"
     },
     {
       "path": "docs\\installation.md",
-      "accessCount": 1,
-      "lastAccessed": 1778912314173,
+      "accessCount": 2,
+      "lastAccessed": 1778912460170,
+      "type": "file"
+    },
+    {
+      "path": "docs\\npm-cli.md",
+      "accessCount": 2,
+      "lastAccessed": 1778912461132,
+      "type": "file"
+    },
+    {
+      "path": "docs\\security.md",
+      "accessCount": 2,
+      "lastAccessed": 1778912462130,
       "type": "file"
     }
   ],
