@@ -50,7 +50,8 @@ try {
   appendTrace('session_started', `Session resumed with active workflow: ${state.ticketKey}`, state.ticketKey, state.phase);
 
   // Emit context reminder to stderr (visible in Claude Code output)
-  const risk = state.riskLevel === 'high' ? '🔴 HIGH' : state.riskLevel === 'medium' ? '🟡 MEDIUM' : '🟢 LOW';
+  const riskMap = { high: '🔴 HIGH', 높음: '🔴 HIGH', medium: '🟡 MEDIUM', 보통: '🟡 MEDIUM', low: '🟢 LOW', 낮음: '🟢 LOW' };
+  const risk = riskMap[state.riskLevel] ?? '🟢 LOW';
   console.error(`[TicketPilot] Active workflow: ${state.ticketKey} | phase: ${state.phase} | risk: ${risk} | mode: ${state.mode ?? 'plan'}`);
   console.error(`[TicketPilot] Run /tp:resume to restore full context, or /tp:status for details.`);
 
