@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TicketPilot — Claude Code Plugin for Jira</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --red: #E8192C;
+      --red-dark: #b01020;
+      --red-glow: rgba(232,25,44,0.3);
+      --bg: #080808;
+      --bg2: #0f0f0f;
+      --bg3: #151515;
+      --text: #ffffff;
+      --text-muted: #888;
+      --border: rgba(255,255,255,0.08);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 48px; height: 64px;
+      background: rgba(8,8,8,0.9);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      display: flex; align-items: center; gap: 10px;
+      font-weight: 900; font-size: 1.2rem; text-decoration: none; color: var(--text);
+    }
+    .nav-logo-icon {
+      width: 32px; height: 32px; background: var(--red);
+      border-radius: 6px; display: flex; align-items: center; justify-content: center;
+      font-weight: 900; font-size: 0.85rem; color: white; letter-spacing: -1px;
+    }
+    .nav-links { display: flex; gap: 32px; }
+    .nav-links a {
+      color: var(--text-muted); text-decoration: none; font-size: 0.9rem;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+    .nav-actions { display: flex; gap: 12px; align-items: center; }
+    .btn-ghost {
+      padding: 8px 16px; border-radius: 8px; font-size: 0.85rem; font-weight: 600;
+      background: transparent; border: 1px solid var(--border);
+      color: var(--text); text-decoration: none; transition: all 0.2s;
+    }
+    .btn-ghost:hover { border-color: rgba(255,255,255,0.3); }
+    .btn-red {
+      padding: 8px 18px; border-radius: 8px; font-size: 0.85rem; font-weight: 700;
+      background: var(--red); border: none; color: white; text-decoration: none;
+      cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 6px;
+    }
+    .btn-red:hover { background: #ff2a3c; box-shadow: 0 0 20px var(--red-glow); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      padding: 120px 48px 80px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; top: 0; right: 0;
+      width: 60%; height: 100%;
+      background: radial-gradient(ellipse at 80% 50%, rgba(232,25,44,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(232,25,44,0.1); border: 1px solid rgba(232,25,44,0.3);
+      border-radius: 100px; padding: 6px 14px; font-size: 0.78rem; font-weight: 600;
+      color: var(--red); margin-bottom: 24px;
+    }
+    .hero-badge::before { content: '⚡'; }
+    .hero-title {
+      font-size: clamp(2.4rem, 4.5vw, 3.8rem);
+      font-weight: 900;
+      line-height: 1.05;
+      margin-bottom: 24px;
+      letter-spacing: -1px;
+    }
+    .hero-title .red { color: var(--red); }
+    .hero-desc {
+      font-size: 1.05rem; color: var(--text-muted); line-height: 1.7;
+      max-width: 480px; margin-bottom: 36px;
+    }
+    .hero-ctas { display: flex; gap: 14px; align-items: center; margin-bottom: 48px; }
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 14px 28px; border-radius: 10px; font-size: 0.95rem; font-weight: 700;
+      background: var(--red); color: white; text-decoration: none;
+      transition: all 0.2s; border: none; cursor: pointer;
+    }
+    .btn-primary:hover { background: #ff2a3c; box-shadow: 0 0 30px var(--red-glow); transform: translateY(-1px); }
+    .btn-secondary {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 14px 24px; border-radius: 10px; font-size: 0.95rem; font-weight: 600;
+      background: var(--bg3); color: var(--text); text-decoration: none;
+      border: 1px solid var(--border); transition: all 0.2s;
+    }
+    .btn-secondary:hover { border-color: rgba(255,255,255,0.2); transform: translateY(-1px); }
+    .hero-features {
+      display: flex; gap: 32px; flex-wrap: wrap;
+    }
+    .hero-feature { display: flex; flex-direction: column; gap: 4px; }
+    .hero-feature-label { font-size: 0.75rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+    .hero-feature-value { font-size: 0.88rem; font-weight: 600; color: var(--text); }
+
+    /* terminal */
+    .hero-right { position: relative; }
+    .mascot-wrap {
+      position: absolute; top: -60px; right: -20px; width: 320px; z-index: 2;
+      pointer-events: none;
+    }
+    .mascot-wrap img { width: 100%; filter: drop-shadow(0 0 40px rgba(232,25,44,0.25)); }
+    .terminal {
+      background: #0d0d0d; border: 1px solid var(--border);
+      border-radius: 14px; overflow: hidden;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.04);
+    }
+    .terminal-header {
+      padding: 12px 16px; background: #141414;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .dot { width: 12px; height: 12px; border-radius: 50%; }
+    .dot-red { background: #FF5F57; }
+    .dot-yellow { background: #FFBD2E; }
+    .dot-green { background: #28C840; }
+    .terminal-title { margin-left: 8px; font-size: 0.78rem; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; }
+    .terminal-body { padding: 20px 24px; font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; line-height: 1.8; }
+    .t-prompt { color: #666; }
+    .t-cmd { color: #fff; }
+    .t-ok { color: #28C840; }
+    .t-info { color: #888; }
+    .t-red { color: var(--red); }
+    .t-dim { color: #555; }
+    .t-label { color: #60a5fa; }
+    .t-line { margin: 2px 0; }
+    .terminal-status {
+      padding: 12px 24px; background: rgba(232,25,44,0.06);
+      border-top: 1px solid rgba(232,25,44,0.15);
+      font-family: 'JetBrains Mono', monospace; font-size: 0.78rem;
+      color: var(--red); display: flex; align-items: center; gap: 8px;
+    }
+    .status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--red); animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+    /* ── BADGES ── */
+    .badges {
+      padding: 28px 48px;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 48px; flex-wrap: wrap;
+    }
+    .badges-label { font-size: 0.8rem; color: var(--text-muted); font-weight: 600; white-space: nowrap; }
+    .badge-list { display: flex; gap: 24px; flex-wrap: wrap; }
+    .badge {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 0.82rem; color: var(--text-muted); font-weight: 500;
+    }
+    .badge-icon { font-size: 1rem; }
+
+    /* ── SECTION ── */
+    section { padding: 96px 48px; }
+    .section-tag {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
+      color: var(--red); margin-bottom: 16px;
+    }
+    .section-title {
+      font-size: clamp(2rem, 3.5vw, 3rem); font-weight: 900;
+      line-height: 1.1; letter-spacing: -0.5px; margin-bottom: 16px;
+    }
+    .section-desc { font-size: 1rem; color: var(--text-muted); line-height: 1.7; max-width: 560px; }
+
+    /* ── HOW IT WORKS ── */
+    .how { background: var(--bg2); }
+    .how-header { text-align: center; margin-bottom: 64px; }
+    .how-header .section-desc { margin: 0 auto; }
+    .how-img {
+      width: 100%; border-radius: 16px; overflow: hidden;
+      border: 1px solid var(--border);
+      box-shadow: 0 24px 80px rgba(0,0,0,0.5);
+    }
+    .how-img img { width: 100%; display: block; }
+    .how-steps {
+      display: grid; grid-template-columns: repeat(5, 1fr); gap: 24px; margin-top: 48px;
+    }
+    .step {
+      background: var(--bg3); border: 1px solid var(--border);
+      border-radius: 12px; padding: 24px 20px; text-align: center;
+      transition: all 0.3s;
+    }
+    .step:hover { border-color: rgba(232,25,44,0.3); transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,0.4); }
+    .step-num {
+      width: 40px; height: 40px; border-radius: 10px;
+      background: var(--red); color: white;
+      font-weight: 900; font-size: 1rem;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 16px;
+    }
+    .step-title { font-size: 0.9rem; font-weight: 700; margin-bottom: 8px; }
+    .step-desc { font-size: 0.78rem; color: var(--text-muted); line-height: 1.6; }
+
+    /* ── INSTALL ── */
+    .install { background: var(--bg); }
+    .install-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: start; margin-top: 56px; }
+    .install-steps { display: flex; flex-direction: column; gap: 24px; }
+    .install-step {
+      display: flex; gap: 20px; align-items: flex-start;
+    }
+    .install-step-num {
+      width: 36px; height: 36px; border-radius: 8px;
+      background: rgba(232,25,44,0.15); border: 1px solid rgba(232,25,44,0.3);
+      color: var(--red); font-weight: 700; font-size: 0.9rem;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .install-step-content { flex: 1; }
+    .install-step-title { font-size: 0.95rem; font-weight: 700; margin-bottom: 6px; }
+    .install-step-desc { font-size: 0.82rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 12px; }
+    .code-block {
+      background: #0d0d0d; border: 1px solid var(--border);
+      border-radius: 8px; padding: 12px 16px;
+      font-family: 'JetBrains Mono', monospace; font-size: 0.78rem;
+      color: #e5e5e5; line-height: 1.8;
+    }
+    .code-block .comment { color: #555; }
+    .code-block .cmd { color: #fff; }
+    .code-block .val { color: #86efac; }
+    .install-note {
+      background: rgba(232,25,44,0.05); border: 1px solid rgba(232,25,44,0.15);
+      border-radius: 10px; padding: 20px;
+      font-size: 0.82rem; color: var(--text-muted); line-height: 1.7; margin-top: 24px;
+    }
+    .install-note strong { color: var(--red); }
+
+    .install-right { position: sticky; top: 80px; }
+    .env-card {
+      background: var(--bg3); border: 1px solid var(--border);
+      border-radius: 14px; overflow: hidden;
+    }
+    .env-card-header {
+      padding: 16px 20px; border-bottom: 1px solid var(--border);
+      font-size: 0.85rem; font-weight: 700; display: flex; align-items: center; gap: 8px;
+    }
+    .env-card-header::before { content: '🔐'; }
+    .env-card-body { padding: 20px; display: flex; flex-direction: column; gap: 12px; }
+    .env-row { display: flex; flex-direction: column; gap: 4px; }
+    .env-key { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--red); font-weight: 600; }
+    .env-val { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; color: #888; }
+    .env-divider { height: 1px; background: var(--border); }
+    .jira-link {
+      padding: 16px 20px; border-top: 1px solid var(--border);
+      font-size: 0.78rem; color: var(--text-muted);
+    }
+    .jira-link a { color: var(--red); text-decoration: none; }
+    .jira-link a:hover { text-decoration: underline; }
+
+    /* ── SAFETY ── */
+    .safety { background: var(--bg2); }
+    .safety-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 56px; }
+    .safety-card {
+      background: var(--bg3); border: 1px solid var(--border);
+      border-radius: 14px; padding: 28px 24px; transition: all 0.3s;
+    }
+    .safety-card:hover { border-color: rgba(232,25,44,0.25); transform: translateY(-3px); }
+    .safety-icon { font-size: 2rem; margin-bottom: 16px; }
+    .safety-title { font-size: 1rem; font-weight: 700; margin-bottom: 10px; }
+    .safety-desc { font-size: 0.82rem; color: var(--text-muted); line-height: 1.7; }
+    .safety-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 16px; }
+    .tag {
+      padding: 4px 10px; border-radius: 6px;
+      font-size: 0.7rem; font-weight: 600;
+      background: rgba(232,25,44,0.1); color: var(--red);
+      border: 1px solid rgba(232,25,44,0.2);
+    }
+
+    /* ── HUD ── */
+    .hud-demo {
+      background: #0d0d0d; border: 1px solid var(--border);
+      border-radius: 10px; padding: 14px 20px; margin-top: 40px;
+      font-family: 'JetBrains Mono', monospace; font-size: 0.82rem;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .hud-demo .hud-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--red); animation: pulse 2s infinite; }
+    .hud-demo .hud-text { color: #aaa; }
+    .hud-demo .hud-text span { color: white; }
+    .hud-demo .hud-text .red { color: var(--red); }
+
+    /* ── CTA ── */
+    .cta {
+      text-align: center; padding: 120px 48px;
+      background: linear-gradient(180deg, var(--bg) 0%, #100407 50%, var(--bg) 100%);
+      position: relative; overflow: hidden;
+    }
+    .cta::before {
+      content: '';
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(232,25,44,0.1) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .cta-title { font-size: clamp(2rem, 4vw, 3.5rem); font-weight: 900; line-height: 1.1; margin-bottom: 20px; }
+    .cta-desc { font-size: 1rem; color: var(--text-muted); margin-bottom: 40px; }
+    .cta-actions { display: flex; gap: 16px; justify-content: center; }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 40px 48px; border-top: 1px solid var(--border);
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 16px;
+    }
+    .footer-logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 0.95rem; }
+    .footer-links { display: flex; gap: 24px; }
+    .footer-links a { color: var(--text-muted); text-decoration: none; font-size: 0.82rem; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--text); }
+    .footer-copy { color: var(--text-muted); font-size: 0.78rem; }
+
+    @media (max-width: 900px) {
+      nav { padding: 0 20px; }
+      .nav-links { display: none; }
+      .hero { grid-template-columns: 1fr; padding: 100px 20px 60px; }
+      .hero-right { display: none; }
+      .how-steps { grid-template-columns: repeat(2, 1fr); }
+      .install-grid { grid-template-columns: 1fr; }
+      .safety-grid { grid-template-columns: 1fr; }
+      section { padding: 64px 20px; }
+      .badges { padding: 20px; }
+      .cta { padding: 80px 20px; }
+      footer { padding: 32px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">
+    <div class="nav-logo-icon">TP</div>
+    TicketPilot
+  </a>
+  <div class="nav-links">
+    <a href="#how">How It Works</a>
+    <a href="#install">Install</a>
+    <a href="#safety">Safety</a>
+    <a href="https://github.com/ororso11/ticketpilot-claudecode">Docs</a>
+  </div>
+  <div class="nav-actions">
+    <a href="https://github.com/ororso11/ticketpilot-claudecode" class="btn-ghost">⭐ GitHub</a>
+    <a href="#install" class="btn-red">⚡ Install Plugin</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <div class="hero-badge">Claude Code Plugin for Jira</div>
+    <h1 class="hero-title">
+      TURN JIRA TICKETS INTO<br>
+      <span class="red">STRUCTURED<br>DEVELOPMENT<br>WORKFLOWS</span>
+    </h1>
+    <p class="hero-desc">
+      TicketPilot이 Claude Code와 Jira를 연결합니다.<br>
+      티켓 분석부터 구현 계획, 영향 분석까지 — 자동으로, 안전하게.
+    </p>
+    <div class="hero-ctas">
+      <a href="#install" class="btn-primary">⚡ Install Plugin<br><small style="font-weight:400;font-size:0.7rem">for Claude Code</small></a>
+      <a href="#how" class="btn-secondary">▶ How It Works</a>
+    </div>
+    <div class="hero-features">
+      <div class="hero-feature">
+        <span class="hero-feature-label">Jira Native</span>
+        <span class="hero-feature-value">Atlassian 직접 연동</span>
+      </div>
+      <div class="hero-feature">
+        <span class="hero-feature-label">AI-Powered</span>
+        <span class="hero-feature-value">Claude가 분석 + 계획</span>
+      </div>
+      <div class="hero-feature">
+        <span class="hero-feature-label">Read-Only v0.1</span>
+        <span class="hero-feature-value">코드 자동 수정 없음</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <div class="mascot-wrap">
+      <img src="images/mascot.png" alt="TicketPilot Mascot" />
+    </div>
+    <div class="terminal" style="margin-top: 80px;">
+      <div class="terminal-header">
+        <div class="dot dot-red"></div>
+        <div class="dot dot-yellow"></div>
+        <div class="dot dot-green"></div>
+        <span class="terminal-title">CLAUDE CODE</span>
+      </div>
+      <div class="terminal-body">
+        <div class="t-line"><span class="t-prompt">$ </span><span class="t-cmd">/tp:start PROJ-123</span></div>
+        <div class="t-line" style="margin-top:8px"><span class="t-ok">✓</span> <span class="t-info">Jira 티켓 로드됨</span></div>
+        <div class="t-line"><span class="t-ok">✓</span> <span class="t-info">요구사항 분석 중...</span></div>
+        <div class="t-line"><span class="t-ok">✓</span> <span class="t-info">구현 계획 생성 중...</span></div>
+        <div class="t-line"><span class="t-ok">✓</span> <span class="t-info">영향 분석 중...</span></div>
+        <div class="t-line"><span class="t-ok">✓</span> <span class="t-info">아티팩트 생성 완료</span></div>
+        <div class="t-line" style="margin-top:8px; color:#555">───────────────────────</div>
+        <div class="t-line"><span class="t-label">위험도:</span> <span style="color:#facc15">⚠ 보통</span></div>
+        <div class="t-line"><span class="t-label">단계:</span>   <span class="t-info">계획완료</span></div>
+        <div class="t-line" style="margin-top:8px"><span class="t-dim">다음: 계획을 검토하고 승인하세요</span></div>
+      </div>
+      <div class="terminal-status">
+        <div class="status-dot"></div>
+        TicketPilot 활성 — PROJ-123
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BADGES -->
+<div class="badges">
+  <span class="badges-label">v0.1 기능</span>
+  <div class="badge-list">
+    <span class="badge"><span class="badge-icon">🎫</span> Jira REST API v3</span>
+    <span class="badge"><span class="badge-icon">🧠</span> Claude 직접 분석</span>
+    <span class="badge"><span class="badge-icon">📋</span> 3종 아티팩트 자동 생성</span>
+    <span class="badge"><span class="badge-icon">🔒</span> 읽기 전용 안전 모드</span>
+    <span class="badge"><span class="badge-icon">🚨</span> Bitbucket/Bamboo 가드</span>
+    <span class="badge"><span class="badge-icon">📊</span> 한글 HUD 상태바</span>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<section class="how" id="how">
+  <div class="how-header">
+    <div class="section-tag">⚡ How It Works</div>
+    <h2 class="section-title">Jira에서 실행 계획까지 5단계</h2>
+    <p class="section-desc">티켓 키 하나로 전체 개발 계획을 자동 생성합니다.</p>
+  </div>
+
+  <div class="how-img">
+    <img src="images/how-it-works.png" alt="How TicketPilot Works" />
+  </div>
+
+  <div class="how-steps">
+    <div class="step">
+      <div class="step-num">01</div>
+      <div class="step-title">티켓 로드</div>
+      <div class="step-desc">Jira API로 티켓 정보와 댓글을 직접 가져옵니다</div>
+    </div>
+    <div class="step">
+      <div class="step-num">02</div>
+      <div class="step-title">AI 분석</div>
+      <div class="step-desc">요구사항, 인수조건, 의존성을 자동으로 추출합니다</div>
+    </div>
+    <div class="step">
+      <div class="step-num">03</div>
+      <div class="step-title">계획 & PRD</div>
+      <div class="step-desc">구현 계획과 영향 분석 아티팩트를 생성합니다</div>
+    </div>
+    <div class="step">
+      <div class="step-num">04</div>
+      <div class="step-title">검토 & 승인</div>
+      <div class="step-desc">계획을 검토하고 진행 여부를 결정합니다</div>
+    </div>
+    <div class="step">
+      <div class="step-num">05</div>
+      <div class="step-title">실행</div>
+      <div class="step-desc">승인 후 구현, 테스트, 딜리버리를 진행합니다 (v0.2+)</div>
+    </div>
+  </div>
+</section>
+
+<!-- INSTALL -->
+<section class="install" id="install">
+  <div class="section-tag">⚡ Installation</div>
+  <h2 class="section-title">3단계로 시작하기</h2>
+  <p class="section-desc">플러그인 설치 → 셋업 → 시작. CLI 별도 설치 불필요.</p>
+
+  <div class="install-grid">
+    <div class="install-steps">
+
+      <div class="install-step">
+        <div class="install-step-num">1</div>
+        <div class="install-step-content">
+          <div class="install-step-title">플러그인 설치</div>
+          <div class="install-step-desc">Claude Code 세션에서 아래 명령을 <strong>한 줄씩</strong> 실행하세요.</div>
+          <div class="code-block">
+            <span class="comment"># 마켓플레이스 등록</span><br>
+            <span class="cmd">/plugin marketplace add https://github.com/ororso11/ticketpilot-claudecode</span><br><br>
+            <span class="comment"># 플러그인 설치</span><br>
+            <span class="cmd">/plugin install ticketpilot-claudecode@ticketpilot-claudecode-marketplace</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="install-step">
+        <div class="install-step-num">2</div>
+        <div class="install-step-content">
+          <div class="install-step-title">Jira 인증 정보 설정</div>
+          <div class="install-step-desc">터미널에서 환경변수를 설정하세요. API 토큰은 Atlassian에서 발급받으세요.</div>
+          <div class="code-block">
+            <span class="comment"># Windows PowerShell</span><br>
+            <span class="cmd">$env:JIRA_BASE_URL=</span><span class="val">"https://your-company.atlassian.net"</span><br>
+            <span class="cmd">$env:JIRA_EMAIL=</span><span class="val">"you@example.com"</span><br>
+            <span class="cmd">$env:JIRA_API_TOKEN=</span><span class="val">"your-api-token"</span><br><br>
+            <span class="comment"># macOS / Linux</span><br>
+            <span class="cmd">export JIRA_BASE_URL=</span><span class="val">"https://your-company.atlassian.net"</span><br>
+            <span class="cmd">export JIRA_EMAIL=</span><span class="val">"you@example.com"</span><br>
+            <span class="cmd">export JIRA_API_TOKEN=</span><span class="val">"your-api-token"</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="install-step">
+        <div class="install-step-num">3</div>
+        <div class="install-step-content">
+          <div class="install-step-title">셋업 & 시작</div>
+          <div class="install-step-desc">Claude Code에서 셋업 마법사를 실행하고 첫 티켓을 시작하세요.</div>
+          <div class="code-block">
+            <span class="comment"># 셋업 (최초 1회)</span><br>
+            <span class="cmd">/tp:setup</span><br><br>
+            <span class="comment"># 티켓 워크플로우 시작</span><br>
+            <span class="cmd">/tp:start PROJ-123</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="install-note">
+        <strong>⚠ 주의:</strong> 명령어는 반드시 한 줄씩 실행하세요. 여러 줄을 한 번에 붙여넣으면 URL이 합쳐져 오류가 발생합니다.
+      </div>
+
+      <!-- HUD -->
+      <div style="margin-top: 32px;">
+        <div class="install-step-title" style="margin-bottom:12px">선택: HUD 상태바 설정</div>
+        <div class="install-step-desc" style="margin-bottom:12px">Claude Code <code>settings.json</code> 에 추가하면 실시간 상태를 확인할 수 있습니다.</div>
+        <div class="code-block">
+{<br>
+&nbsp;&nbsp;<span class="val">"statusLine"</span>: {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="val">"type"</span>: <span class="val">"command"</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="val">"command"</span>: <span class="val">"node ~/.claude/plugins/ticketpilot-claudecode-marketplace/ticketpilot-claudecode/scripts/hud.js"</span><br>
+&nbsp;&nbsp;}<br>
+}
+        </div>
+        <div class="hud-demo">
+          <div class="hud-dot"></div>
+          <div class="hud-text">
+            TP | <span>PROJ-123</span> | <span>계획완료</span> | 위험:<span class="red">보통</span> | 다음:<span>계획승인</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="install-right">
+      <div class="env-card">
+        <div class="env-card-header">Jira 인증 정보</div>
+        <div class="env-card-body">
+          <div class="env-row">
+            <span class="env-key">JIRA_BASE_URL</span>
+            <span class="env-val">https://your-company.atlassian.net</span>
+          </div>
+          <div class="env-divider"></div>
+          <div class="env-row">
+            <span class="env-key">JIRA_EMAIL</span>
+            <span class="env-val">your-atlassian-email@company.com</span>
+          </div>
+          <div class="env-divider"></div>
+          <div class="env-row">
+            <span class="env-key">JIRA_API_TOKEN</span>
+            <span class="env-val">••••••••••••••••••••</span>
+          </div>
+        </div>
+        <div class="jira-link">
+          API 토큰 발급 →
+          <a href="https://id.atlassian.com/manage-profile/security/api-tokens" target="_blank">
+            id.atlassian.com/manage-profile/security/api-tokens
+          </a>
+        </div>
+      </div>
+
+      <div style="margin-top: 24px; background: var(--bg3); border: 1px solid var(--border); border-radius: 14px; padding: 24px;">
+        <div style="font-size: 0.85rem; font-weight: 700; margin-bottom: 16px;">주요 명령어</div>
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <div style="display: flex; justify-content: space-between; font-size: 0.78rem;">
+            <code style="color: var(--red); font-family: 'JetBrains Mono', monospace;">/tp:setup</code>
+            <span style="color: var(--text-muted);">초기 설정 마법사</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; font-size: 0.78rem;">
+            <code style="color: var(--red); font-family: 'JetBrains Mono', monospace;">/tp:start PROJ-123</code>
+            <span style="color: var(--text-muted);">티켓 워크플로우 시작</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; font-size: 0.78rem;">
+            <code style="color: var(--red); font-family: 'JetBrains Mono', monospace;">/tp:status</code>
+            <span style="color: var(--text-muted);">현재 상태 확인</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; font-size: 0.78rem;">
+            <code style="color: var(--red); font-family: 'JetBrains Mono', monospace;">/tp:resume</code>
+            <span style="color: var(--text-muted);">세션 복원</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; font-size: 0.78rem;">
+            <code style="color: var(--red); font-family: 'JetBrains Mono', monospace;">/tp:doctor</code>
+            <span style="color: var(--text-muted);">연결 상태 진단</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; font-size: 0.78rem;">
+            <code style="color: var(--red); font-family: 'JetBrains Mono', monospace;">/tp:cancel</code>
+            <span style="color: var(--text-muted);">워크플로우 취소</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SAFETY -->
+<section class="safety" id="safety">
+  <div class="section-tag">🔒 Safety First</div>
+  <h2 class="section-title">Harness 안전 시스템</h2>
+  <p class="section-desc">AI가 안전하게 동작하도록 제어, 감시, 개선 3계층으로 보호합니다.</p>
+
+  <div class="safety-grid">
+    <div class="safety-card">
+      <div class="safety-icon">🛡️</div>
+      <div class="safety-title">제어 (Control)</div>
+      <div class="safety-desc">
+        위험 경로 자동 분류, Bitbucket/Bamboo CI push 차단 경고, 승인 게이트. v0.1은 코드 자동 수정 없음.
+      </div>
+      <div class="safety-tags">
+        <span class="tag">위험도 분류</span>
+        <span class="tag">Bitbucket 가드</span>
+        <span class="tag">승인 게이트</span>
+      </div>
+    </div>
+    <div class="safety-card">
+      <div class="safety-icon">👁️</div>
+      <div class="safety-title">감시 (Monitoring)</div>
+      <div class="safety-desc">
+        모든 이벤트를 trace.jsonl에 기록. 세션 시작/종료, 도구 사용, 위험 감지를 실시간 추적.
+      </div>
+      <div class="safety-tags">
+        <span class="tag">trace.jsonl</span>
+        <span class="tag">audit.log</span>
+        <span class="tag">HUD 상태바</span>
+      </div>
+    </div>
+    <div class="safety-card">
+      <div class="safety-icon">🔄</div>
+      <div class="safety-title">개선 (Feedback)</div>
+      <div class="safety-desc">
+        세션 복원, 컨텍스트 보존, 상태 자동 저장. 중단된 워크플로우를 언제든 재개할 수 있습니다.
+      </div>
+      <div class="safety-tags">
+        <span class="tag">세션 복원</span>
+        <span class="tag">상태 자동저장</span>
+        <span class="tag">컨텍스트 보존</span>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top: 40px; background: var(--bg3); border: 1px solid var(--border); border-radius: 14px; padding: 28px;">
+    <div style="font-size: 0.85rem; font-weight: 700; margin-bottom: 16px; color: var(--text-muted);">v0.1 보장 사항</div>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px;">
+      <div style="display: flex; gap: 10px; align-items: flex-start; font-size: 0.82rem; color: var(--text-muted);">
+        <span style="color: #28C840; font-size: 1rem; flex-shrink: 0;">✓</span> 코드 파일 자동 수정 없음
+      </div>
+      <div style="display: flex; gap: 10px; align-items: flex-start; font-size: 0.82rem; color: var(--text-muted);">
+        <span style="color: #28C840; font-size: 1rem; flex-shrink: 0;">✓</span> Jira 댓글 자동 등록 없음
+      </div>
+      <div style="display: flex; gap: 10px; align-items: flex-start; font-size: 0.82rem; color: var(--text-muted);">
+        <span style="color: #28C840; font-size: 1rem; flex-shrink: 0;">✓</span> PR 자동 생성 없음
+      </div>
+      <div style="display: flex; gap: 10px; align-items: flex-start; font-size: 0.82rem; color: var(--text-muted);">
+        <span style="color: #28C840; font-size: 1rem; flex-shrink: 0;">✓</span> 인증 정보 로그 저장 없음
+      </div>
+      <div style="display: flex; gap: 10px; align-items: flex-start; font-size: 0.82rem; color: var(--text-muted);">
+        <span style="color: #28C840; font-size: 1rem; flex-shrink: 0;">✓</span> 모든 데이터 로컬 저장
+      </div>
+      <div style="display: flex; gap: 10px; align-items: flex-start; font-size: 0.82rem; color: var(--text-muted);">
+        <span style="color: #28C840; font-size: 1rem; flex-shrink: 0;">✓</span> git push 사전 경고
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta">
+  <h2 class="cta-title">지금 바로 시작하세요</h2>
+  <p class="cta-desc">Claude Code + Jira로 개발 워크플로우를 자동화하세요.</p>
+  <div class="cta-actions">
+    <a href="#install" class="btn-primary">⚡ Install Plugin</a>
+    <a href="https://github.com/ororso11/ticketpilot-claudecode" class="btn-secondary">GitHub에서 보기</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">
+    <div class="nav-logo-icon">TP</div>
+    TicketPilot
+  </div>
+  <div class="footer-links">
+    <a href="https://github.com/ororso11/ticketpilot-claudecode">GitHub</a>
+    <a href="#install">Installation</a>
+    <a href="#how">How It Works</a>
+    <a href="#safety">Security</a>
+  </div>
+  <div class="footer-copy">Apache-2.0 · v0.1.0</div>
+</footer>
+
+</body>
+</html>
