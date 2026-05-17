@@ -1,7 +1,5 @@
 {
   "version": 2,
-  "name": "ticketpilot-claudecode",
-  "public": true,
   "builds": [
     {
       "src": "landing/**",
