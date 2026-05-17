@@ -96,6 +96,12 @@
   },
   "hotPaths": [
     {
+      "path": "plugins\\ticketpilot-claudecode\\hooks\\scripts\\pre-tool-guard.js",
+      "accessCount": 5,
+      "lastAccessed": 1779015602831,
+      "type": "file"
+    },
+    {
       "path": "",
       "accessCount": 4,
       "lastAccessed": 1778912438133,
@@ -147,12 +153,6 @@
       "path": "plugins\\ticketpilot-claudecode\\.claude-plugin\\plugin.json",
       "accessCount": 3,
       "lastAccessed": 1778912459180,
-      "type": "file"
-    },
-    {
-      "path": "plugins\\ticketpilot-claudecode\\hooks\\scripts\\pre-tool-guard.js",
-      "accessCount": 3,
-      "lastAccessed": 1778980430192,
       "type": "file"
     },
     {
@@ -246,6 +246,24 @@
       "type": "file"
     },
     {
+      "path": "plugins\\ticketpilot-claudecode\\hooks\\hooks.json",
+      "accessCount": 2,
+      "lastAccessed": 1779015580891,
+      "type": "file"
+    },
+    {
+      "path": "plugins\\ticketpilot-claudecode\\hooks\\scripts\\post-tool-state-save.js",
+      "accessCount": 2,
+      "lastAccessed": 1779015609672,
+      "type": "file"
+    },
+    {
+      "path": "plugins\\ticketpilot-claudecode\\hooks\\scripts\\on-user-prompt.js",
+      "accessCount": 2,
+      "lastAccessed": 1779015616071,
+      "type": "file"
+    },
+    {
       "path": "plugins\\ticketpilot-claudecode\\scripts\\hud.js",
       "accessCount": 1,
       "lastAccessed": 1778915165868,
@@ -256,6 +274,24 @@
       "accessCount": 1,
       "lastAccessed": 1778975427969,
       "type": "directory"
+    },
+    {
+      "path": "plugins\\ticketpilot-claudecode\\hooks\\scripts\\on-session-start.js",
+      "accessCount": 1,
+      "lastAccessed": 1779007678761,
+      "type": "file"
+    },
+    {
+      "path": "plugins\\ticketpilot-claudecode\\hooks\\scripts\\on-stop-summary.js",
+      "accessCount": 1,
+      "lastAccessed": 1779015561089,
+      "type": "file"
+    },
+    {
+      "path": "plugins\\ticketpilot-claudecode\\hooks\\scripts\\pre-compact-save.js",
+      "accessCount": 1,
+      "lastAccessed": 1779015561366,
+      "type": "file"
     }
   ],
   "userDirectives": []

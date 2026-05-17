@@ -2,38 +2,44 @@
   "hooks": {
     "SessionStart": [
       {
-        "command": "node .claude-plugin/hooks/scripts/on-session-start.js",
-        "description": "Check .ticketpilot state on session start"
+        "command": "node \"$CLAUDE_PLUGIN_ROOT/hooks/scripts/on-session-start.js\"",
+        "description": "세션 시작 시 활성 워크플로우 상태 확인"
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "command": "node \"$CLAUDE_PLUGIN_ROOT/hooks/scripts/on-user-prompt.js\"",
+        "description": "사용자 입력에서 Jira 티켓 키 감지"
       }
     ],
     "PreToolUse": [
       {
-        "command": "node .claude-plugin/hooks/scripts/pre-tool-guard.js",
-        "description": "Guard against high-risk tool calls"
+        "command": "node \"$CLAUDE_PLUGIN_ROOT/hooks/scripts/pre-tool-guard.js\"",
+        "description": "위험 명령 및 Bitbucket push 안전 가드"
       }
     ],
     "PostToolUse": [
       {
-        "command": "node .claude-plugin/hooks/scripts/post-tool-state-save.js",
-        "description": "Auto-save state after tool use"
+        "command": "node \"$CLAUDE_PLUGIN_ROOT/hooks/scripts/post-tool-state-save.js\"",
+        "description": "도구 사용 후 변경 파일 상태 자동 저장"
       }
     ],
     "PreCompact": [
       {
-        "command": "node .claude-plugin/hooks/scripts/pre-compact-save.js",
-        "description": "Preserve state and notepad before context compaction"
+        "command": "node \"$CLAUDE_PLUGIN_ROOT/hooks/scripts/pre-compact-save.js\"",
+        "description": "컨텍스트 압축 전 상태 보존 안내"
       }
     ],
     "Stop": [
       {
-        "command": "node .claude-plugin/hooks/scripts/on-stop-summary.js",
-        "description": "Log session summary on stop"
+        "command": "node \"$CLAUDE_PLUGIN_ROOT/hooks/scripts/on-stop-summary.js\"",
+        "description": "세션 종료 시 감사 로그 기록"
       }
     ]
   },
   "env": {
-    "TP_DISABLE": "Disable all TicketPilot hooks when set to 1",
-    "TP_SKIP_HOOKS": "Comma-separated list of hook names to skip (e.g. PreToolUse,PostToolUse)",
-    "TP_NOTIFY": "Enable notifications (0=disabled, 1=enabled; v0.3+)"
+    "TP_DISABLE": "1로 설정 시 모든 TicketPilot 훅 비활성화",
+    "TP_SKIP_HOOKS": "건너뛸 훅 이름 콤마 구분 (예: PreToolUse,PostToolUse)",
+    "TP_NOTIFY": "알림 활성화 (0=비활성, 1=활성; v0.3+)"
   }
 }
