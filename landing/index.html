@@ -93,23 +93,18 @@
       align-items: center;
       position: relative;
       overflow: hidden;
-    }
-    .hero-section::before {
-      content: '';
-      position: absolute; top: 0; right: 0;
-      width: 50%; height: 100%;
-      background: radial-gradient(ellipse at 90% 50%, rgba(232,25,44,0.07) 0%, transparent 65%);
-      pointer-events: none;
+      background: radial-gradient(ellipse at 48% 60%, rgba(232,25,44,0.10) 0%, transparent 55%), var(--bg);
     }
     .hero-inner {
-      max-width: 1160px;
+      max-width: 1280px;
       margin: 0 auto;
-      padding: 80px 48px;
+      padding: 60px 48px 80px;
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 64px;
-      align-items: center;
+      grid-template-columns: 1fr 520px 1fr;
+      gap: 0;
+      align-items: flex-end;
       width: 100%;
+      position: relative;
     }
     .hero-badge {
       display: inline-flex; align-items: center; gap: 8px;
@@ -151,13 +146,23 @@
     .hero-feature-value { font-size: 0.85rem; font-weight: 600; color: var(--text); }
 
     /* ── TERMINAL ── */
-    .hero-right { display: flex; flex-direction: column; gap: 20px; }
-    .mascot-bar {
-      display: flex; align-items: center; justify-content: flex-end;
+    .hero-left { padding-right: 20px; padding-bottom: 40px; }
+    .hero-dog {
+      display: flex; align-items: flex-end; justify-content: center;
+      position: relative; z-index: 10;
+      margin-right: -80px; /* 터미널 쪽으로 침범 */
     }
-    .mascot-bar img {
-      width: 120px;
-      filter: drop-shadow(0 0 24px rgba(232,25,44,0.3));
+    .hero-dog img {
+      width: 115%;
+      max-width: 580px;
+      filter: drop-shadow(0 0 60px rgba(232,25,44,0.55));
+    }
+    .hero-right {
+      display: flex; flex-direction: column; gap: 0;
+      padding-bottom: 40px;
+      align-self: center;
+      z-index: 1; /* 강아지 뒤 */
+      position: relative;
     }
     .terminal {
       background: #0d0d0d; border: 1px solid var(--border);
@@ -384,6 +389,7 @@
       .container, .nav-inner, .badges-inner, .hero-inner, .footer-inner { padding: 0 24px; }
       .nav-links { display: none; }
       .hero-inner { grid-template-columns: 1fr; gap: 48px; padding: 60px 24px; }
+      .hero-dog { display: none; }
       .hero-right { display: none; }
       .how-steps { grid-template-columns: repeat(2, 1fr); }
       .install-grid { grid-template-columns: 1fr; }
@@ -448,10 +454,11 @@
       </div>
     </div>
 
+    <div class="hero-dog">
+      <img src="images/mascot.png" alt="TicketPilot Mascot" />
+    </div>
+
     <div class="hero-right">
-      <div class="mascot-bar">
-        <img src="images/mascot.png" alt="TicketPilot Mascot" />
-      </div>
       <div class="terminal">
         <div class="terminal-header">
           <div class="dot dot-red"></div>
