@@ -1,7 +1,0 @@
-{
-  "tool_name": "Bash",
-  "tool_input_preview": "{\"command\":\"ls \\\"C:\\\\Users\\\\LG\\\\ticketpilot-claudecode\\\\plugins\\\\ticketpilot-claudecode\\\\commands\\\\\\\"\",\"description\":\"List TicketPilot command files\"}",
-  "error": "Exit code 2\n/usr/bin/bash: eval: line 1: unexpected EOF while looking for matching `\"'",
-  "timestamp": "2026-05-16T06:24:54.754Z",
-  "retry_count": 1
-}

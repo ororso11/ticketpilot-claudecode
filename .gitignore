@@ -1,0 +1,43 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+build/
+.next/
+out/
+
+# Environment & secrets
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.p12
+*.pfx
+*.cert
+
+# TicketPilot local state (user-specific, not for sharing)
+.ticketpilot/state/
+.ticketpilot/logs/
+.ticketpilot/artifacts/
+
+# oh-my-claudecode session state (machine-specific)
+.omc/state/
+.omc/notepad.md
+
+# Vercel
+.vercel
+
+# OS / Editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/settings.json
+*.swp
+*.swo
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
