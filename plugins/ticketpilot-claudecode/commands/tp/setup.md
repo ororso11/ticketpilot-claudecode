@@ -92,23 +92,54 @@ Bash/PowerShell 도구로 아래 디렉토리 생성 (없는 경우에만):
 
 ---
 
-### Step 4 — HUD 상태바 설정 안내 (선택)
+### Step 4 — HUD 상태바 자동 등록
 
-이전 단계 모두 성공 시에만 표시:
+이전 단계 모두 성공 시에만 실행.
 
+**4-1. 플러그인 루트 경로 확인**
+
+Bash 또는 PowerShell 도구로 `CLAUDE_PLUGIN_ROOT` 환경변수 값을 읽어온다:
+
+```bash
+# macOS/Linux
+echo "$CLAUDE_PLUGIN_ROOT"
+
+# Windows PowerShell
+echo $env:CLAUDE_PLUGIN_ROOT
 ```
-선택사항: Claude Code 상태바에 TicketPilot 상태를 표시할 수 있습니다.
 
-Claude Code settings.json에 추가하세요:
+값이 없으면 아래 경로를 순서대로 탐색해 `hud.js`가 존재하는 경로를 찾는다:
+- `~/.claude/plugins/ticketpilot-claudecode-marketplace/ticketpilot-claudecode/scripts/hud.js`
+- `~/.claude/plugins/ticketpilot-claudecode/scripts/hud.js`
 
-  {
-    "statusLine": {
-      "type": "command",
-      "command": "node ~/.claude/plugins/ticketpilot-claudecode-marketplace/ticketpilot-claudecode/scripts/hud.js"
-    }
-  }
+**4-2. ~/.claude/settings.json 업데이트**
 
-settings.json 위치: ~/.claude/settings.json
+`~/.claude/settings.json` 파일을 읽는다 (없으면 `{}` 로 간주).
+
+`statusLine` 필드를 아래 값으로 추가 또는 덮어쓴다:
+
+```json
+"statusLine": "node \"<HUD_JS_절대경로>\""
+```
+
+`<HUD_JS_절대경로>` 는 4-1에서 확인한 실제 경로로 치환. 경로에 공백이 있으면 따옴표로 감싼다.
+
+수정된 settings.json을 저장.
+
+**4-3. 결과 출력**
+
+성공:
+```
+✓ HUD 상태바 등록 완료
+  [TP#0.1.0] | PROJ-123 | 구현중→테스트시작 | 위험:보통 | 변경:0
+  Claude Code를 재시작하면 상태바에 TicketPilot이 표시됩니다.
+```
+
+hud.js 경로를 찾지 못한 경우:
+```
+⚠ HUD 경로를 자동으로 찾지 못했습니다.
+  수동으로 ~/.claude/settings.json 에 추가하세요:
+  "statusLine": "node \"<플러그인경로>/scripts/hud.js\""
 ```
 
 ---

@@ -2,7 +2,7 @@
 import { readFileSync, existsSync } from 'fs';
 import { join } from 'path';
 
-const statePath = join(process.cwd(), '.ticketpilot', 'state', 'current-ticket.json');
+const VERSION = '0.1.0';
 
 const phaseKo = {
   initialized: '초기화',
@@ -16,38 +16,38 @@ const phaseKo = {
   cancelled: '취소됨',
 };
 
-const riskKo = {
-  low: '낮음',
-  medium: '보통',
-  high: '높음',
-  낮음: '낮음',
-  보통: '보통',
-  높음: '높음',
-};
-
 const nextKo = {
   initialized: '분석시작',
   analyzed: '계획생성',
   planned: '계획승인',
   approved: '구현시작',
-  implementing: '구현중',
-  testing: '테스트중',
-  reviewing: '검토중',
-  done: '완료',
-  cancelled: '재시작필요',
+  implementing: '테스트시작',
+  testing: '검토요청',
+  reviewing: '머지준비',
+  done: '-',
+  cancelled: '재시작',
 };
 
+const riskKo = {
+  low: '낮음', medium: '보통', high: '높음',
+  낮음: '낮음', 보통: '보통', 높음: '높음',
+};
+
+const statePath = join(process.cwd(), '.ticketpilot', 'state', 'current-ticket.json');
+
 if (!existsSync(statePath)) {
-  process.stdout.write('TP | 대기중 | /tp:start <티켓키>');
+  process.stdout.write(`[TP#${VERSION}] | 대기중 | /tp:start <티켓키>`);
   process.exit(0);
 }
 
 try {
   const state = JSON.parse(readFileSync(statePath, 'utf8'));
   const phase = phaseKo[state.phase] ?? state.phase;
+  const next = nextKo[state.phase] ?? '?';
   const risk = riskKo[state.riskLevel] ?? state.riskLevel ?? '?';
-  const next = nextKo[state.phase] ?? '';
-  process.stdout.write(`TP | ${state.ticketKey} | ${phase} | 위험:${risk} | 다음:${next}`);
+  const files = state.changedFiles?.length ?? 0;
+
+  process.stdout.write(`[TP#${VERSION}] | ${state.ticketKey} | ${phase}→${next} | 위험:${risk} | 변경:${files}`);
 } catch {
-  process.stdout.write('TP | 상태오류');
+  process.stdout.write(`[TP#${VERSION}] | 상태오류`);
 }
