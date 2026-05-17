@@ -149,29 +149,30 @@
     .hero-left { padding-right: 20px; padding-bottom: 40px; }
     .hero-dog {
       display: flex; align-items: flex-end; justify-content: center;
-      position: relative; z-index: 10;
-      margin-right: -80px; /* 터미널 쪽으로 침범 */
+      position: relative; z-index: 1;
+      margin-right: -80px;
     }
     .hero-dog img {
       width: 115%;
       max-width: 580px;
-      filter: drop-shadow(0 0 60px rgba(232,25,44,0.55));
+      filter: drop-shadow(0 0 50px rgba(232,25,44,0.5));
     }
     .hero-right {
       display: flex; flex-direction: column; gap: 0;
       padding-bottom: 40px;
       align-self: center;
-      z-index: 1; /* 강아지 뒤 */
+      z-index: 10;
       position: relative;
+      margin-left: -100px;
     }
     .terminal {
-      background: #0d0d0d; border: 1px solid var(--border);
+      background: #111111; border: 1px solid rgba(255,255,255,0.18);
       border-radius: 14px; overflow: hidden;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.04);
+      box-shadow: 0 24px 80px rgba(0,0,0,0.95), 0 0 0 1px rgba(255,255,255,0.1);
     }
     .terminal-header {
-      padding: 12px 16px; background: #141414;
-      border-bottom: 1px solid var(--border);
+      padding: 12px 16px; background: #222222;
+      border-bottom: 1px solid rgba(255,255,255,0.14);
       display: flex; align-items: center; gap: 8px;
     }
     .dot { width: 12px; height: 12px; border-radius: 50%; }
@@ -189,8 +190,8 @@
     .t-label { color: #60a5fa; }
     .t-line { margin: 2px 0; }
     .terminal-status {
-      padding: 11px 24px; background: rgba(232,25,44,0.06);
-      border-top: 1px solid rgba(232,25,44,0.15);
+      padding: 11px 24px; background: #1a0608;
+      border-top: 1px solid rgba(232,25,44,0.4);
       font-family: 'JetBrains Mono', monospace; font-size: 0.76rem;
       color: var(--red); display: flex; align-items: center; gap: 8px;
     }
