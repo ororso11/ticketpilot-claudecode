@@ -150,6 +150,12 @@
       "type": "file"
     },
     {
+      "path": "plugins\\ticketpilot-claudecode\\hooks\\scripts\\pre-tool-guard.js",
+      "accessCount": 3,
+      "lastAccessed": 1778980430192,
+      "type": "file"
+    },
+    {
       "path": "docs\\installation.md",
       "accessCount": 2,
       "lastAccessed": 1778912460170,
@@ -231,6 +237,12 @@
       "path": "plugins\\ticketpilot-claudecode\\commands\\tp\\config.md",
       "accessCount": 2,
       "lastAccessed": 1778975416412,
+      "type": "file"
+    },
+    {
+      "path": "plugins\\ticketpilot-claudecode\\agents\\safety-guard.md",
+      "accessCount": 2,
+      "lastAccessed": 1778980397319,
       "type": "file"
     },
     {

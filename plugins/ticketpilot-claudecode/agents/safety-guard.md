@@ -36,14 +36,43 @@ IF files > 10 affected → level = "medium", warn user
 ELSE → level = "low", proceed with informational note
 ```
 
+## Bitbucket / Bamboo 안전 가드
+
+Bitbucket + Bamboo CI 환경에서 아래 작업은 **명시적 사용자 승인 없이 절대 실행하지 않는다:**
+
+| 위험 작업 | 이유 |
+|---------|------|
+| `git push` (모든 형태) | Bamboo CI 빌드 트리거 가능 |
+| `git push origin main/master/develop` | 보호 브랜치 직접 푸시 |
+| `git push --force` | 원격 히스토리 파괴 |
+| `bb pr create` / Bitbucket CLI | 미검증 코드 PR 생성 |
+| Bitbucket REST API POST/PUT/DELETE | 리포지토리 상태 변경 |
+
+**감지 시 경고 형식:**
+```
+⚠ 안전 가드: Bitbucket 작업 감지됨
+
+작업: git push origin main
+위험: Bamboo CI 빌드가 자동 트리거될 수 있습니다.
+
+로컬 검증 체크리스트:
+  [ ] 로컬 테스트 통과 확인
+  [ ] 코드 리뷰 완료
+  [ ] 티켓 인수 조건 충족 확인
+
+진행하려면 명시적으로 승인하세요:
+  "Bitbucket push 승인 — 로컬 검증 완료"
+```
+
 ## v0.1 Hard Limits (cannot be overridden without explicit user instruction)
 
 - No automatic code file writes
 - No automatic Jira comment posting
 - No automatic PR creation
-- No `git push` without user approval
+- No `git push` without user approval — **Bitbucket push triggers Bamboo CI**
 - No `git reset --hard` or destructive git operations
 - No external network calls beyond Jira API read operations
+- No Bitbucket REST API write calls (POST/PUT/DELETE)
 
 ## Warning Format
 
