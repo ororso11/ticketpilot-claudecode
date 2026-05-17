@@ -50,16 +50,33 @@ async function readStdin() {
 
     const toolName = toolResult.tool ?? toolResult.name ?? 'unknown';
 
+    const HIGH_RISK_PATHS = [
+      /\.env($|\.)/, /\.pem$/, /\.key$/, /\/(security|auth|payment|privacy)\//,
+      /\/(secrets?|credentials?|\.ssh)\//, /application-prod\.(yml|yaml)$/,
+      /\/(db\/migration|migrations)\//, /\.npmrc$/, /config\/(prod|production)\//,
+    ];
+
     if (['Write', 'Edit', 'write_file', 'edit_file'].includes(toolName)) {
       const filePath = toolResult.input?.file_path ?? toolResult.input?.path ?? '';
       if (filePath && state.changedFiles) {
         if (!state.changedFiles.includes(filePath)) {
           state.changedFiles.push(filePath);
           state.updatedAt = new Date().toISOString();
+
+          // Escalate risk level if writing to high-risk path
+          const isHighRisk = HIGH_RISK_PATHS.some((p) => p.test(filePath.replace(/\\/g, '/')));
+          if (isHighRisk && state.riskLevel !== '높음') {
+            const prevRisk = state.riskLevel;
+            state.riskLevel = '높음';
+            appendTrace('risk_escalated', `고위험 경로 수정으로 위험도 상향: ${prevRisk} → 높음 (${filePath})`, state.ticketKey, state.phase);
+            console.error(`[TicketPilot] ⚠ 위험도 자동 상향: ${prevRisk} → 높음`);
+            console.error(`[TicketPilot] 이유: 고위험 경로 파일 수정됨 — ${filePath}`);
+          }
+
           try {
             fs.writeFileSync(stateFile, JSON.stringify(state, null, 2), 'utf-8');
           } catch { /* ignore */ }
-          appendTrace('state_auto_saved', `변경 파일 추가: +${filePath}`, state.ticketKey, state.phase);
+          appendTrace('state_auto_saved', `변경 파일 추가: +${filePath}${isHighRisk ? ' [HIGH RISK]' : ''}`, state.ticketKey, state.phase);
         }
       }
     }

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // TicketPilot — on-user-prompt hook
-// 사용자 입력에서 Jira 티켓 키를 감지하고 /tp:start 를 제안합니다.
+// Detects Jira ticket keys and warns about credential patterns in user input.
 
 import fs from 'fs';
 import path from 'path';
@@ -10,6 +10,34 @@ async function readStdin() {
   const chunks = [];
   for await (const chunk of process.stdin) chunks.push(chunk);
   return Buffer.concat(chunks).toString('utf-8').trim();
+}
+
+// Patterns that look like real credentials pasted into chat
+const CREDENTIAL_PATTERNS = [
+  { pattern: /AKIA[0-9A-Z]{16}/, name: 'AWS Access Key' },
+  { pattern: /sk-[A-Za-z0-9]{20,}/, name: 'API Secret Key' },
+  { pattern: /ghp_[A-Za-z0-9]{36}/, name: 'GitHub Personal Access Token' },
+  { pattern: /xoxb-[0-9]+-[A-Za-z0-9-]+/, name: 'Slack Bot Token' },
+  { pattern: /ya29\.[A-Za-z0-9_-]{20,}/, name: 'Google OAuth Token' },
+  { pattern: /eyJ[A-Za-z0-9+/]{30,}\.eyJ[A-Za-z0-9+/]{10,}/, name: 'JWT Token' },
+  { pattern: /Basic\s+[A-Za-z0-9+/]{40,}={0,2}/, name: 'Basic Auth 토큰' },
+  { pattern: /Bearer\s+[A-Za-z0-9+/._-]{30,}/, name: 'Bearer Token' },
+  { pattern: /-----BEGIN\s+(RSA\s+)?PRIVATE\s+KEY-----/, name: 'Private Key (PEM)' },
+];
+
+function appendTrace(event, message, ticketKey) {
+  try {
+    const logsDir = path.join(process.cwd(), '.ticketpilot', 'logs');
+    const traceFile = path.join(logsDir, 'trace.jsonl');
+    if (!fs.existsSync(logsDir)) fs.mkdirSync(logsDir, { recursive: true });
+    const entry = JSON.stringify({
+      timestamp: new Date().toISOString(),
+      event,
+      ...(ticketKey && { ticketKey }),
+      message,
+    });
+    fs.appendFileSync(traceFile, entry + '\n', 'utf-8');
+  } catch { /* never crash */ }
 }
 
 (async () => {
@@ -29,6 +57,19 @@ async function readStdin() {
       prompt = inputData;
     }
 
+    // ── 1. Credential paste detection ────────────────────────────────────────
+    for (const { pattern, name } of CREDENTIAL_PATTERNS) {
+      if (pattern.test(prompt)) {
+        appendTrace('credential_in_prompt', `인증정보 패턴 감지 (채팅): ${name}`);
+        console.error(`[TicketPilot] ⛔ SECURITY: 채팅에 실제 인증정보처럼 보이는 값이 포함되어 있습니다.`);
+        console.error(`[TicketPilot] 감지 유형: ${name}`);
+        console.error(`[TicketPilot] 인증정보는 환경변수로 설정하세요. 채팅에 직접 붙여넣지 마세요.`);
+        console.error(`[TicketPilot] 채팅 기록에 노출된 인증정보는 즉시 교체하세요.`);
+        process.exit(0);
+      }
+    }
+
+    // ── 2. Jira ticket key detection ─────────────────────────────────────────
     const TICKET_PATTERN = /\b([A-Z][A-Z0-9]+-\d+)\b/g;
     const matches = [...prompt.matchAll(TICKET_PATTERN)].map((m) => m[1]);
     if (matches.length === 0) process.exit(0);
@@ -52,7 +93,6 @@ async function readStdin() {
     })();
 
     const uniqueTickets = [...new Set(matches)];
-
     for (const ticketKey of uniqueTickets) {
       if (activeTicket === ticketKey) continue;
       if (autoStart) {
