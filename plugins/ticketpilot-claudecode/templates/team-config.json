@@ -1,0 +1,68 @@
+{
+  "_comment": "팀 공유 설정 파일. git에 커밋하세요. 민감 정보(PAT, 이메일) 절대 기록 금지.",
+  "version": "0.1.0",
+
+  "jira": {
+    "baseUrl": "https://your-company.atlassian.net",
+    "apiType": "cloud",
+    "_apiTypeOptions": ["cloud", "server", "datacenter"],
+    "projectKeys": ["PROJ", "BACKEND", "FE"],
+    "allowedIssueTypes": ["개발", "Story", "Task", "Bug", "Sub-task", "Technical Task"],
+    "serviceAccount": {
+      "enabled": false,
+      "_note": "true 시 개인 PAT 대신 서비스 계정 PAT 사용. 팀장이 JIRA_SERVICE_PAT 환경변수 배포."
+    }
+  },
+
+  "security": {
+    "piiMasking": {
+      "enabled": true,
+      "patterns": ["email", "phone", "ssn", "card", "internalIp", "base64Token"]
+    },
+    "fieldWhitelist": ["summary", "description", "status", "issuetype", "priority", "assignee", "labels", "components", "comments"],
+    "maxComments": 10,
+    "auditLog": {
+      "enabled": true,
+      "path": ".ticketpilot/logs/audit.log",
+      "includeTicketKey": true,
+      "includeSourceFiles": true,
+      "includeContent": false
+    }
+  },
+
+  "llm": {
+    "tokenBudget": {
+      "enabled": true,
+      "maxInputTokensPerSession": 50000,
+      "warnAt": 40000,
+      "_note": "Claude Code는 직접 제어 불가. 이 값은 소스 분석 파일 수 제한에 사용."
+    },
+    "sourceAnalysis": {
+      "maxFilesToScan": 10,
+      "maxFilesToRead": 5,
+      "excludePaths": [
+        "node_modules", ".git", "dist", "build", ".next",
+        ".env*", "*.key", "*.pem", ".ssh", "secrets", "credentials"
+      ]
+    }
+  },
+
+  "workflow": {
+    "autoStartOnTicketKey": false,
+    "requirePlanApproval": true,
+    "allowedBranches": ["feature/*", "fix/*", "bugfix/*"],
+    "v02_features": {
+      "_note": "아래는 v0.2에서 활성화됩니다.",
+      "autoLabelAfterAnalysis": false,
+      "autoBranchCreation": false,
+      "notifyOnComplete": false
+    }
+  },
+
+  "network": {
+    "offlineMode": false,
+    "_offlineModeNote": "true 시 npm 외부 통신 없이 로컬 node_modules만 사용",
+    "jiraProxyUrl": null,
+    "_jiraProxyNote": "사내 프록시가 있으면 여기에 설정. null이면 직접 연결."
+  }
+}

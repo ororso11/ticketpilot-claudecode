@@ -12,12 +12,30 @@ TicketPilot 설치 마법사. 플러그인 설치 후 처음 한 번 실행하�
 
 ## 실행 순서
 
-### Step 1 — Jira 환경변수 확인
+### Step 1 — 팀 설정 파일 확인
+
+먼저 `.ticketpilot/team-config.json` 존재 여부 확인:
+
+**팀 설정 파일이 있는 경우 (팀원 모드):**
+```
+✓ 팀 설정 발견: .ticketpilot/team-config.json
+  Jira URL: {team-config의 jira.baseUrl}
+  프로젝트: {team-config의 jira.projectKeys}
+  서비스 계정: {enabled 여부}
+```
+→ `JIRA_BASE_URL`은 team-config에서 자동 로드. `JIRA_EMAIL`과 `JIRA_API_TOKEN`만 개인 설정 필요.
+
+**팀 설정 파일이 없는 경우 (개인/초기 설정 모드):**
+→ 아래 Step 1-B 진행.
+
+---
+
+### Step 1-B — Jira 환경변수 확인 (개인/초기 설정)
 
 환경변수 값은 절대 출력하지 말고, 설정 여부만 확인:
 - `JIRA_BASE_URL` — ✓ 설정됨 / ✗ 없음
 - `JIRA_EMAIL` — ✓ 설정됨 / ✗ 없음
-- `JIRA_API_TOKEN` — ✓ 설정됨 / ✗ 없음
+- `JIRA_API_TOKEN` — ✓ 설정됨 / ✗ 없음 (또는 `JIRA_SERVICE_PAT` — 서비스 계정용)
 
 **하나라도 없으면:**
 
@@ -34,12 +52,33 @@ Jira 인증 정보가 없습니다. 터미널에서 아래를 실행하세요:
   $env:JIRA_EMAIL="you@example.com"
   $env:JIRA_API_TOKEN="your-api-token"
 
-API 토큰 발급: https://id.atlassian.com/manage-profile/security/api-tokens
+  # 팀 서비스 계정 사용 시 (팀장이 배포한 PAT)
+  $env:JIRA_SERVICE_PAT="service-account-token"
 
-설정 후 /tp:setup 다시 실행하세요.
+API 토큰 발급: https://id.atlassian.com/manage-profile/security/api-tokens
 ```
 
 여기서 중단. 이후 단계 진행하지 말 것.
+
+**모두 설정됨:** 계속 진행.
+
+---
+
+### Step 1-C — Jira 인스턴스 유형 감지
+
+`JIRA_BASE_URL` 형식으로 자동 판별:
+
+| URL 패턴 | 유형 | API 경로 |
+|---------|------|---------|
+| `*.atlassian.net` | Jira Cloud | `/rest/api/3/` |
+| `jira.company.com` 또는 IP | Jira Server / Data Center | `/rest/api/2/` |
+
+**Jira Server/DC 감지 시:**
+```
+⚠ Jira Server/Data Center 감지됨.
+  API v2 사용. 일부 Cloud 전용 기능은 제한될 수 있습니다.
+  JIRA_API_TYPE=server 로 명시적 설정을 권장합니다.
+```
 
 **모두 설정됨:** 계속 진행.
 

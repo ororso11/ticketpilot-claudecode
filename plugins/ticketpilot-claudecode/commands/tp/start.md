@@ -41,7 +41,7 @@ Jira 인증 정보가 없습니다. /tp:setup 을 먼저 실행하세요.
 **댓글:**
 - `GET {JIRA_BASE_URL}/rest/api/3/issue/{ticketKey}/comment`
 
-추출할 필드:
+**필드 화이트리스트 (이 필드만 추출, 나머지는 무시):**
 - `fields.summary` — 제목
 - `fields.description` — 설명 (ADF 형식이면 텍스트만 추출)
 - `fields.status.name` — 상태
@@ -50,9 +50,57 @@ Jira 인증 정보가 없습니다. /tp:setup 을 먼저 실행하세요.
 - `fields.assignee.displayName` — 담당자
 - `fields.labels` — 레이블
 - `fields.components[].name` — 컴포넌트
-- 최근 댓글 최대 10개
+- 최근 댓글 최대 10개 (본문만, 작성자 이메일 제외)
 
-**보안 규칙:** API 응답에서 인증 정보가 포함된 필드는 로그에 기록하지 않는다.
+**절대 추출하지 않는 필드:** `reporter.emailAddress`, `customfield_*` (CRM/ERP 연동 필드), `attachment`, `worklog`
+
+**보안 규칙:** API 응답 전체(raw JSON)는 분석에 사용하지 않는다. 위 화이트리스트 필드만 추출 후 사용.
+
+---
+
+### Step 2.5 — 데이터 정제 (PII 마스킹)
+
+추출한 티켓 텍스트에서 아래 패턴을 `[REDACTED]`로 치환한 뒤 분석에 사용:
+
+| 패턴 | 예시 | 처리 |
+|------|------|------|
+| 이메일 주소 | `user@company.com` | `[EMAIL]` |
+| 전화번호 | `010-1234-5678`, `+82-10-...` | `[PHONE]` |
+| 주민등록번호 | `123456-1234567` | `[SSN]` |
+| 신용카드 번호 | `4111-1111-1111-1111` | `[CARD]` |
+| IP 주소 (사설망) | `192.168.x.x`, `10.x.x.x` | `[INTERNAL_IP]` |
+| Base64 토큰 패턴 | 40자 이상 영문+숫자+특수 | `[TOKEN]` |
+| 금액 (단독 노출 시) | `₩12,345,678` 형태 | 유지 (맥락 필요 시), 단독 나열이면 `[AMOUNT]` |
+
+**마스킹 원칙:**
+- 분석 정확도를 해치지 않는 선에서만 마스킹
+- 마스킹 전 원본은 로컬에 보관하지 않음
+- 마스킹 여부를 `ticket-analysis.md` 상단에 명시:
+  ```
+  > ⚠ 이 분석은 PII 마스킹 처리된 티켓 데이터를 기반으로 합니다.
+  ```
+
+---
+
+### Step 2.7 — 감사 로그 기록
+
+분석 시작 시 `.ticketpilot/logs/audit.log`에 아래 형식으로 기록:
+
+```json
+{
+  "timestamp": "2026-05-18T09:00:00.000Z",
+  "action": "ticket_analysis_start",
+  "ticketKey": "PROJ-123",
+  "issueType": "개발",
+  "riskLevel": "보통",
+  "piiMasked": true,
+  "fieldsAnalyzed": ["summary", "description", "status", "priority"],
+  "sourceFilesAnalyzed": 3,
+  "sessionId": "<Claude Code 세션 식별자 또는 타임스탬프>"
+}
+```
+
+이 로그는 "누가 어떤 티켓을 분석했는지" 추적용. 티켓 내용 자체는 기록하지 않음.
 
 404 응답 시:
 ```

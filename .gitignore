@@ -17,10 +17,13 @@ out/
 *.pfx
 *.cert
 
-# TicketPilot local state (user-specific, not for sharing)
+# TicketPilot — team-config.json and project-memory.json are SHARED (committed)
+# Everything else is personal/local
+.ticketpilot/config.local.json
 .ticketpilot/state/
 .ticketpilot/logs/
 .ticketpilot/artifacts/
+.ticketpilot/notepad.md
 
 # oh-my-claudecode session state (machine-specific)
 .omc/state/
